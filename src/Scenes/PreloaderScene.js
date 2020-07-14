@@ -65,7 +65,8 @@ export default class PreloaderScene extends Phaser.Scene {
     });
 
     // load images here
-    this.load.spritesheet('sprite', 'assets/spritesheet.png', { frameWidth: 288, frameHeight: 288 });
+    this.load.spritesheet('demon', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.image('star', 'assets/star.png');
     this.load.image('logo', 'assets/logo.png');
 
     // Audio
