@@ -6,16 +6,13 @@ var defaultWizardCooldown = 2812;
 var defaultRangerCooldown = 2278;
 var defaultFighterCooldown = 1533;
 var defaultRogueCooldown = 1805;
+var defaultBardCooldown = 837;
 
 var maxDemonHealth = 1000;
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super('Game');
-    this.wizardCooldown = defaultWizardCooldown;
-    this.rangerCooldown = defaultRangerCooldown;
-    this.fighterCooldown = defaultFighterCooldown;
-    this.rogueCooldown = defaultRogueCooldown;
   }
 
   /* Grab a reference to the canvas in our scene's preload so we can
@@ -39,6 +36,12 @@ export default class GameScene extends Phaser.Scene {
     this.gameEnded = false;
 
     this.createAnims();
+
+    this.hero1FiredAt = Date.now();
+    this.hero2FiredAt = Date.now();
+    this.hero3FiredAt = Date.now();
+    this.hero4FiredAt = Date.now();
+    this.hero5FiredAt = Date.now();
 
     this.model = this.sys.game.globals.model;
     switch (this.model.level) {
@@ -95,12 +98,12 @@ export default class GameScene extends Phaser.Scene {
     this.anims.create({
       key: 'wizard-idle',
       frames: this.anims.generateFrameNumbers('wizard', { start: 0, end: 3 }),
-      frameRate: 10,
+      frameRate: 5,
       repeat: -1
     });
     this.anims.create({
       key: 'wizard-attack',
-      frames: [ { key: 'wizard', frame: 4 } ],
+      frames: this.anims.generateFrameNumbers('wizardAttack', { start: 0, end: 3 }),
       duration: 500
     });
 
@@ -108,12 +111,12 @@ export default class GameScene extends Phaser.Scene {
     this.anims.create({
       key: 'ranger-idle',
       frames: this.anims.generateFrameNumbers('ranger', { start: 0, end: 3 }),
-      frameRate: 10,
+      frameRate: 5,
       repeat: -1
     });
     this.anims.create({
       key: 'ranger-attack',
-      frames: [ { key: 'ranger', frame: 4 } ],
+      frames: this.anims.generateFrameNumbers('rangerAttack', { start: 0, end: 3 }),
       duration: 500
     });
 
@@ -121,12 +124,12 @@ export default class GameScene extends Phaser.Scene {
     this.anims.create({
       key: 'fighter-idle',
       frames: this.anims.generateFrameNumbers('fighter', { start: 0, end: 3 }),
-      frameRate: 10,
+      frameRate: 5,
       repeat: -1
     });
     this.anims.create({
       key: 'fighter-attack',
-      frames: [ { key: 'fighter', frame: 4 } ],
+      frames: this.anims.generateFrameNumbers('fighterAttack', { start: 0, end: 3 }),
       duration: 500
     });
 
@@ -134,29 +137,53 @@ export default class GameScene extends Phaser.Scene {
     this.anims.create({
       key: 'rogue-idle',
       frames: this.anims.generateFrameNumbers('rogue', { start: 0, end: 3 }),
-      frameRate: 10,
+      frameRate: 5,
       repeat: -1
     });
     this.anims.create({
       key: 'rogue-attack',
-      frames: [ { key: 'rogue', frame: 4 } ],
+      frames: this.anims.generateFrameNumbers('rogueAttack', { start: 0, end: 3 }),
+      duration: 500
+    });
+
+    // Bard animations
+    this.anims.create({
+      key: 'bard-idle',
+      frames: this.anims.generateFrameNumbers('bard', { start: 0, end: 3 }),
+      frameRate: 5,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'bard-attack',
+      frames: this.anims.generateFrameNumbers('bardAttack', { start: 0, end: 3 }),
       duration: 500
     });
 
     // Projectile animations
     this.anims.create({
       key: 'fireball-default',
-      frames: [ { key: 'fireball', frame: 4 } ],
-      frameRate: 20
+      frames: this.anims.generateFrameNumbers('fireball', { start: 0, end: 3 }),
+      frameRate: 15,
+      repeat: -1
     });
     this.anims.create({
       key: 'arrow-default',
-      frames: [ { key: 'arrow', frame: 4 } ],
+      frames: [ { key: 'arrow', frame: 0 } ],
       frameRate: 20
     });
     this.anims.create({
       key: 'dagger-default',
-      frames: [ { key: 'dagger', frame: 4 } ],
+      frames: [ { key: 'dagger', frame: 0 } ],
+      frameRate: 20
+    });
+    this.anims.create({
+      key: 'note1-default',
+      frames: [ { key: 'note1', frame: 0 } ],
+      frameRate: 20
+    });
+    this.anims.create({
+      key: 'note2-default',
+      frames: [ { key: 'note2', frame: 0 } ],
       frameRate: 20
     });
   }
@@ -169,11 +196,21 @@ export default class GameScene extends Phaser.Scene {
     this.add.image(0, 0, 'floor').setOrigin(0, 0);
     this.add.image(0, 0, 'background').setOrigin(0, 0);
     this.add.image(0, 0, 'lava').setOrigin(0, 0);
+
     this.addDemon();
-    this.addWizard (((0/4) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.addRanger (((1/4) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.addFighter(((2/4) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.addRogue  (((3/4) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+
+    this.hero1 = this.createWizard (((0/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero2 = this.createRanger (((1/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero3 = this.createFighter(((2/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero4 = this.createRogue  (((3/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero5 = this.createBard   (((4/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+
+    this.hero1Cooldown = defaultWizardCooldown;
+    this.hero2Cooldown = defaultRangerCooldown;
+    this.hero3Cooldown = defaultFighterCooldown;
+    this.hero4Cooldown = defaultRogueCooldown;
+    this.hero5Cooldown = defaultBardCooldown;
+
     this.add.image(0, 0, 'foreground').setOrigin(0, 0);
     this.healthBar = this.add.image(220, 570, 'healthBar').setOrigin(0, 0);
     this.add.image(220, 570, 'healthBarFrame').setOrigin(0, 0);
@@ -187,8 +224,29 @@ export default class GameScene extends Phaser.Scene {
   }
 
   addLevel3() {
-    this.levelBackground = this.add.image(0, 0, 'background-level3').setOrigin(0, 0);
+    this.add.image(0, 0, 'floor').setOrigin(0, 0);
+    this.add.image(0, 0, 'background').setOrigin(0, 0);
+    this.add.image(0, 0, 'lava').setOrigin(0, 0);
+
     this.addDemon();
+
+    this.hero1 = this.createBard(((0/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero2 = this.createBard(((1/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero3 = this.createBard(((2/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero4 = this.createBard(((3/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero5 = this.createBard(((4/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+
+    this.hero1Cooldown = defaultBardCooldown;
+    this.hero2Cooldown = defaultBardCooldown;
+    this.hero3Cooldown = defaultBardCooldown;
+    this.hero4Cooldown = defaultBardCooldown;
+    this.hero5Cooldown = defaultBardCooldown;
+
+    this.add.image(0, 0, 'foreground').setOrigin(0, 0);
+    this.healthBar = this.add.image(220, 570, 'healthBar').setOrigin(0, 0);
+    this.add.image(220, 570, 'healthBarFrame').setOrigin(0, 0);
+    this.powerBar = this.add.image(420, 570, 'powerBar').setOrigin(0, 0);
+    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0);
   }
 
   addDemon(x = 400, y = 500) {
@@ -198,36 +256,44 @@ export default class GameScene extends Phaser.Scene {
     this.demonHealth = maxDemonHealth;
   }
 
-  addWizard(x = 50, y = 100) {
-    this.wizard = this.physics.add.sprite(x, y, 'wizard').anims.play('wizard-idle', true);
-    this.wizard.name = 'wizard';
-    this.physics.world.enable(this.wizard);
-    this.wizard.body.setCollideWorldBounds(true);
-    this.wizardFiredAt = Date.now();
+  createWizard(x = 50, y = 100) {
+    var wizard = this.physics.add.sprite(x, y, 'wizard').anims.play('wizard-idle', true);
+    wizard.name = 'wizard';
+    this.physics.world.enable(wizard);
+    wizard.body.setCollideWorldBounds(true);
+    return wizard;
   }
 
-  addRanger(x = 100, y = 100) {
-    this.ranger = this.physics.add.sprite(x, y, 'ranger').anims.play('ranger-idle', true);
-    this.ranger.name = 'ranger';
-    this.physics.world.enable(this.ranger);
-    this.ranger.body.setCollideWorldBounds(true);
-    this.rangerFiredAt = Date.now();
+  createRanger(x = 100, y = 100) {
+    var ranger = this.physics.add.sprite(x, y, 'ranger').anims.play('ranger-idle', true);
+    ranger.name = 'ranger';
+    this.physics.world.enable(ranger);
+    ranger.body.setCollideWorldBounds(true);
+    return ranger;
   }
 
-  addFighter(x = 150, y = 100) {
-    this.fighter = this.physics.add.sprite(x, y, 'fighter').anims.play('fighter-idle', true);
-    this.fighter.name = 'fighter';
-    this.physics.world.enable(this.fighter);
-    this.fighter.body.setCollideWorldBounds(true);
-    this.fighterFiredAt = Date.now();
+  createFighter(x = 150, y = 100) {
+    var fighter = this.physics.add.sprite(x, y, 'fighter').anims.play('fighter-idle', true);
+    fighter.name = 'fighter';
+    this.physics.world.enable(fighter);
+    fighter.body.setCollideWorldBounds(true);
+    return fighter;
   }
 
-  addRogue(x = 200, y = 100) {
-    this.rogue = this.physics.add.sprite(x, y, 'rogue').anims.play('rogue-idle', true);
-    this.rogue.name = 'rogue';
-    this.physics.world.enable(this.rogue);
-    this.rogue.body.setCollideWorldBounds(true);
-    this.rogueFiredAt = Date.now();
+  createRogue(x = 200, y = 100) {
+    var rogue = this.physics.add.sprite(x, y, 'rogue').anims.play('rogue-idle', true);
+    rogue.name = 'rogue';
+    this.physics.world.enable(rogue);
+    rogue.body.setCollideWorldBounds(true);
+    return rogue;
+  }
+
+  createBard(x = 200, y = 100) {
+    var bard = this.physics.add.sprite(x, y, 'bard').anims.play('bard-idle', true);
+    bard.name = 'bard';
+    this.physics.world.enable(bard);
+    bard.body.setCollideWorldBounds(true);
+    return bard;
   }
 
   update() {
@@ -253,21 +319,26 @@ export default class GameScene extends Phaser.Scene {
 
       // Heroes attack at different intervals
       var now = Date.now();
-      if (now > (this.wizardFiredAt + this.wizardCooldown)) {
-        this.attack(this.wizard);
-        this.wizardFiredAt = now;
+
+      if (now > (this.hero1FiredAt + this.hero1Cooldown)) {
+        this.attack(this.hero1);
+        this.hero1FiredAt = now;
       }
-      if (now > (this.rangerFiredAt + this.rangerCooldown)) {
-        this.attack(this.ranger);
-        this.rangerFiredAt = now;
+      if (now > (this.hero2FiredAt + this.hero2Cooldown)) {
+        this.attack(this.hero2);
+        this.hero2FiredAt = now;
       }
-      if (now > (this.fighterFiredAt + this.fighterCooldown)) {
-        this.attack(this.fighter);
-        this.fighterFiredAt = now;
+      if (now > (this.hero3FiredAt + this.hero3Cooldown)) {
+        this.attack(this.hero3);
+        this.hero3FiredAt = now;
       }
-      if (now > (this.rogueFiredAt + this.rogueCooldown)) {
-        this.attack(this.rogue);
-        this.rogueFiredAt = now;
+      if (now > (this.hero4FiredAt + this.hero4Cooldown)) {
+        this.attack(this.hero4);
+        this.hero4FiredAt = now;
+      }
+      if (now > (this.hero5FiredAt + this.hero5Cooldown)) {
+        this.attack(this.hero5);
+        this.hero5FiredAt = now;
       }
     }
 
@@ -302,6 +373,14 @@ export default class GameScene extends Phaser.Scene {
       break;
       case 'rogue':
       this.rogueAttack(hero);
+      break;
+      case 'bard':
+      if (Math.random() <= 0.5) {
+        this.fireProjectile(hero, 'note1');
+      } else {
+        this.fireProjectile(hero, 'note2');
+      }
+      break
     }
   }
   
@@ -320,6 +399,10 @@ export default class GameScene extends Phaser.Scene {
       break;
       case 'dagger':
       velocityY = 300;
+      break;
+      case 'note1':
+      case 'note2':
+      velocityY = 60;
       break;
     }
 
@@ -340,6 +423,10 @@ export default class GameScene extends Phaser.Scene {
       break;
       case 'dagger':
       this.demonHealth -= 20;
+      break;
+      case 'note1':
+      case 'note2':
+      this.demonHealth -= 1;
       break;
     }
     this.healthBar.setScale(Math.max(this.demonHealth/maxDemonHealth, 0), 1);
