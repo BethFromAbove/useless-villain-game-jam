@@ -9,6 +9,7 @@ var defaultRogueCooldown = 1805;
 var defaultBardCooldown = 837;
 
 var maxDemonHealth = 1000;
+var maxDemonPower = 200;
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -43,6 +44,12 @@ export default class GameScene extends Phaser.Scene {
     this.hero4FiredAt = Date.now();
     this.hero5FiredAt = Date.now();
 
+    // Collection of projectiles
+    this.projectiles = new Phaser.GameObjects.Group(this);
+
+    this.heroes = new Phaser.GameObjects.Group(this);
+    this.demonFireballs = new Phaser.GameObjects.Group(this);
+
     this.model = this.sys.game.globals.model;
     switch (this.model.level) {
       case 1:
@@ -61,6 +68,9 @@ export default class GameScene extends Phaser.Scene {
       break;
     }
 
+    this.physics.add.overlap(this.demon, this.projectiles, this.projectileHitDemon, null, this);
+    this.physics.add.overlap(this.demonFireballs, this.heroes, this.killHero, null, this);
+
     this.debugMode = false;
     this.input.on('pointerdown', () => {
       if (this.debugMode) {
@@ -71,11 +81,6 @@ export default class GameScene extends Phaser.Scene {
 
     // Input Events
     this.cursors = this.input.keyboard.createCursorKeys();
-
-    // Collection of projectiles
-    this.projectiles = new Phaser.GameObjects.Group(this);
-
-    this.physics.add.overlap(this.demon, this.projectiles, this.projectileHitDemon, null, this);
 
     this.cameras.main.fadeIn(500);
   }
@@ -92,6 +97,18 @@ export default class GameScene extends Phaser.Scene {
       key: 'demon-faint',
       frames: this.anims.generateFrameNumbers('demonFaint', { start: 0, end: 7 }),
       frameRate: 7
+    });
+    this.anims.create({
+      key: 'demon-attack',
+      frames: this.anims.generateFrameNumbers('demonAttack', { start: 0, end: 7 }),
+      yoyo: true,
+      frameRate: 20
+    });
+    this.anims.create({
+      key: 'demon-fireball',
+      frames: this.anims.generateFrameNumbers('demonFireball', { start: 0, end: 4 }),
+      frameRate: 15,
+      repeat: -1
     });
 
     // Wizard animations
@@ -254,6 +271,7 @@ export default class GameScene extends Phaser.Scene {
     this.physics.world.enable(this.demon);
     this.demon.body.setCollideWorldBounds(true);
     this.demonHealth = maxDemonHealth;
+    this.demonPower = 0;
   }
 
   createWizard(x = 50, y = 100) {
@@ -261,6 +279,7 @@ export default class GameScene extends Phaser.Scene {
     wizard.name = 'wizard';
     this.physics.world.enable(wizard);
     wizard.body.setCollideWorldBounds(true);
+    this.heroes.add(wizard);
     return wizard;
   }
 
@@ -269,6 +288,7 @@ export default class GameScene extends Phaser.Scene {
     ranger.name = 'ranger';
     this.physics.world.enable(ranger);
     ranger.body.setCollideWorldBounds(true);
+    this.heroes.add(ranger);
     return ranger;
   }
 
@@ -277,6 +297,7 @@ export default class GameScene extends Phaser.Scene {
     fighter.name = 'fighter';
     this.physics.world.enable(fighter);
     fighter.body.setCollideWorldBounds(true);
+    this.heroes.add(fighter);
     return fighter;
   }
 
@@ -285,6 +306,7 @@ export default class GameScene extends Phaser.Scene {
     rogue.name = 'rogue';
     this.physics.world.enable(rogue);
     rogue.body.setCollideWorldBounds(true);
+    this.heroes.add(rogue);
     return rogue;
   }
 
@@ -293,6 +315,7 @@ export default class GameScene extends Phaser.Scene {
     bard.name = 'bard';
     this.physics.world.enable(bard);
     bard.body.setCollideWorldBounds(true);
+    this.heroes.add(bard);
     return bard;
   }
 
@@ -316,6 +339,14 @@ export default class GameScene extends Phaser.Scene {
       else {
         this.demon.body.setVelocityX(0);
       }
+
+      //demon power
+      this.demonPower++;
+      if (this.demonPower >= maxDemonPower) {
+        this.demonAttack();
+        this.demonPower = 0;
+      }
+      this.powerBar.setScale(Math.max(this.demonPower/maxDemonPower, 0), 1);
 
       // Heroes attack at different intervals
       var now = Date.now();
@@ -348,12 +379,39 @@ export default class GameScene extends Phaser.Scene {
         p.destroy();
       }
     });
+
+    // Kill fireballs that are off screen
+    this.demonFireballs.children.each((f) => {
+      if (this.offscreen(f)) {
+        f.destroy();
+      }
+    });
   }
 
   /* Predicate to determine if a sprite has gone off screen.
   */
   offscreen(s) {
     return (s.x < 0 || s.x > this.canvas.width || s.y < 0 || s.y > this.canvas.height);
+  }
+
+  demonAttack() {
+    this.demon.anims.play('demon-attack', true);
+    this.demon.on('animationcomplete', () => {this.demon.anims.play('demon-idle', true)});
+
+    var demonFireball = this.physics.add.sprite((this.demon.x + 60), this.demon.y, 'demonFireball').anims.play('demon-fireball', true);
+    demonFireball.body.setVelocityY(-300);
+    this.demonFireballs.add(demonFireball);
+  }
+
+  killHero(fireball, hero) {
+    fireball.destroy();
+
+    hero.setTint(0xff0000);
+    this.gameEnded = true;
+
+    var timer = this.time.delayedCall(1000, () => {
+      console.log("end of game");
+    }, [], this);  // delay in ms 
   }
 
   /* Attack with a hero.
