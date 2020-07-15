@@ -67,6 +67,7 @@ export default class PreloaderScene extends Phaser.Scene {
     // load images here
 
     this.load.spritesheet('demon', 'assets/demonRest.png', { frameWidth: 200, frameHeight: 200 });
+    this.load.spritesheet('demonFaint', 'assets/demonfaint.png', { frameWidth: 200, frameHeight: 200 });
 
     this.load.spritesheet('wizard', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('ranger', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
@@ -81,6 +82,11 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.image('background', 'assets/Background.png');
     this.load.image('lava', 'assets/Lava.png');
     this.load.image('foreground', 'assets/Foreground.png');
+
+    this.load.image('healthBar', 'assets/greenbar.png');
+    this.load.image('healthBarFrame', 'assets/lifebarframe.png');
+    this.load.image('powerBar', 'assets/powerbar.png');
+    this.load.image('powerBarFrame', 'assets/powerbarframe.png');
 
     this.load.image('logo', 'assets/logo.png');
 
