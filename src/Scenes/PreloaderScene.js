@@ -65,14 +65,23 @@ export default class PreloaderScene extends Phaser.Scene {
     });
 
     // load images here
-    this.load.spritesheet('demon', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+
+    this.load.spritesheet('demon', 'assets/demonRest.png', { frameWidth: 200, frameHeight: 200 });
+
     this.load.spritesheet('wizard', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('ranger', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('fighter', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('rogue', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+
     this.load.image('fireball', 'assets/star.png');
     this.load.image('arrow', 'assets/star.png');
     this.load.image('dagger', 'assets/star.png');
+
+    this.load.image('floor', 'assets/Floor.png');
+    this.load.image('background', 'assets/Background.png');
+    this.load.image('lava', 'assets/Lava.png');
+    this.load.image('foreground', 'assets/Foreground.png');
+
     this.load.image('logo', 'assets/logo.png');
 
     // Audio
