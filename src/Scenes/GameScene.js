@@ -76,20 +76,9 @@ export default class GameScene extends Phaser.Scene {
   createAnims() {
     //  Demon animations
     this.anims.create({
-      key: 'demon-left',
-      frames: this.anims.generateFrameNumbers('demon', { start: 0, end: 3 }),
-      frameRate: 10,
-      repeat: -1
-    });
-    this.anims.create({
       key: 'demon-idle',
-      frames: [ { key: 'demon', frame: 4 } ],
-      frameRate: 20
-    });
-    this.anims.create({
-      key: 'demon-right',
-      frames: this.anims.generateFrameNumbers('demon', { start: 5, end: 8 }),
-      frameRate: 10,
+      frames: this.anims.generateFrameNumbers('demon', { start: 0, end: 7 }),
+      frameRate: 7,
       repeat: -1
     });
 
@@ -168,12 +157,15 @@ export default class GameScene extends Phaser.Scene {
   }
 
   addLevel1() {
-    this.levelBackground = this.add.image(0, 0, 'background-level1').setOrigin(0, 0);
+    this.add.image(0, 0, 'floor').setOrigin(0, 0);
+    this.add.image(0, 0, 'background').setOrigin(0, 0);
+    this.add.image(0, 0, 'lava').setOrigin(0, 0);
     this.addDemon();
-    this.addWizard (((0/4) * this.canvas.width) + (this.randWidth() / 4), (100 + (Math.random() * 80)));
-    this.addRanger (((1/4) * this.canvas.width) + (this.randWidth() / 4), (100 + (Math.random() * 80)));
-    this.addFighter(((2/4) * this.canvas.width) + (this.randWidth() / 4), (100 + (Math.random() * 80)));
-    this.addRogue  (((3/4) * this.canvas.width) + (this.randWidth() / 4), (100 + (Math.random() * 80)));
+    this.addWizard (((0/4) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.addRanger (((1/4) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.addFighter(((2/4) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.addRogue  (((3/4) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.add.image(0, 0, 'foreground').setOrigin(0, 0);
   }
 
   addLevel2() {
@@ -228,15 +220,12 @@ export default class GameScene extends Phaser.Scene {
     // Move Demon based on arrow keys
     if (this.cursors.left.isDown) {
       this.demon.body.setVelocityX(-300);
-      this.demon.anims.play('demon-left', true);
     }
     else if (this.cursors.right.isDown) {
       this.demon.body.setVelocityX(300);
-      this.demon.anims.play('demon-right', true);
     }
     else {
       this.demon.body.setVelocityX(0);
-      this.demon.anims.play('demon-idle');
     }
 
     // Heroes attack at different intervals
