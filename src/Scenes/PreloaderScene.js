@@ -68,7 +68,8 @@ export default class PreloaderScene extends Phaser.Scene {
 
     this.load.spritesheet('demon', 'assets/demonRest.png', { frameWidth: 200, frameHeight: 200 });
     this.load.spritesheet('demonFaint', 'assets/demonfaint.png', { frameWidth: 200, frameHeight: 200 });
-    this.load.spritesheet('demonAttack', 'assets/deomHandRaise.png', { frameWidth: 200, frameHeight: 200 });
+    this.load.spritesheet('demonAttack', 'assets/demonHandRaise.png', { frameWidth: 200, frameHeight: 200 });
+    this.load.spritesheet('demonFireball', 'assets/demonfire.png', { frameWidth: 42, frameHeight: 86 });
 
     this.load.spritesheet('wizard', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
     this.load.spritesheet('ranger', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
