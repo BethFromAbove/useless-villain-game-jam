@@ -68,15 +68,25 @@ export default class PreloaderScene extends Phaser.Scene {
 
     this.load.spritesheet('demon', 'assets/demonRest.png', { frameWidth: 200, frameHeight: 200 });
     this.load.spritesheet('demonFaint', 'assets/demonfaint.png', { frameWidth: 200, frameHeight: 200 });
+    this.load.spritesheet('demonAttack', 'assets/deomHandRaise.png', { frameWidth: 200, frameHeight: 200 });
 
-    this.load.spritesheet('wizard', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.spritesheet('ranger', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.spritesheet('fighter', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.spritesheet('rogue', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('wizard', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
+    this.load.spritesheet('ranger', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
+    this.load.spritesheet('fighter', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
+    this.load.spritesheet('rogue', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
+    this.load.spritesheet('bard', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
 
-    this.load.image('fireball', 'assets/star.png');
-    this.load.image('arrow', 'assets/star.png');
-    this.load.image('dagger', 'assets/star.png');
+    this.load.spritesheet('wizardAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
+    this.load.spritesheet('rangerAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
+    this.load.spritesheet('fighterAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
+    this.load.spritesheet('rogueAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
+    this.load.spritesheet('bardAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
+
+    this.load.spritesheet('fireball', 'assets/wizardspell.png', { frameWidth: 27, frameHeight: 28 });
+    this.load.image('arrow', 'assets/Arrow.png');
+    this.load.image('dagger', 'assets/dagger.png');
+    this.load.image('note1', 'assets/music1.png');
+    this.load.image('note2', 'assets/note2.png');
 
     this.load.image('floor', 'assets/Floor.png');
     this.load.image('background', 'assets/Background.png');
