@@ -73,13 +73,13 @@ export default class PreloaderScene extends Phaser.Scene {
 
     this.load.spritesheet('wizard', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
     this.load.spritesheet('ranger', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
-    this.load.spritesheet('fighter', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
+    this.load.spritesheet('fighter', 'assets/knightwalking.png', { frameWidth: 76, frameHeight: 113 });
     this.load.spritesheet('rogue', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
     this.load.spritesheet('bard', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
 
     this.load.spritesheet('wizardAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
     this.load.spritesheet('rangerAttack', 'assets/bowsprite.png', { frameWidth: 84, frameHeight: 125 });
-    this.load.spritesheet('fighterAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
+    this.load.spritesheet('fighterAttack', 'assets/swordsprite.png', { frameWidth: 110, frameHeight: 114 });
     this.load.spritesheet('rogueAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
     this.load.spritesheet('bardAttack', 'assets/bardplayingsprite.png', { frameWidth: 75, frameHeight: 140 });
 
@@ -108,7 +108,7 @@ export default class PreloaderScene extends Phaser.Scene {
 
     this.load.image('goodWorkText', 'assets/keepitup.png');
     this.load.image('adventureresApproachText', 'assets/AdventurersApproach.png');
-    this.load.image('dontKillText', 'assets/Rememberlevel1.png');
+    this.load.image('dontKillText', 'assets/dontkillheroes.png');
 
     this.load.image('optionsButtonUp', 'assets/OptionsButtonUp.png');
     this.load.image('optionsButtonDown', 'assets/OptionsButtonDown.png');
