@@ -78,10 +78,10 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.spritesheet('bard', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
 
     this.load.spritesheet('wizardAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
-    this.load.spritesheet('rangerAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
+    this.load.spritesheet('rangerAttack', 'assets/bowsprite.png', { frameWidth: 84, frameHeight: 125 });
     this.load.spritesheet('fighterAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
     this.load.spritesheet('rogueAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
-    this.load.spritesheet('bardAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
+    this.load.spritesheet('bardAttack', 'assets/bardplayingsprite.png', { frameWidth: 75, frameHeight: 140 });
 
     this.load.spritesheet('fireball', 'assets/wizardspell.png', { frameWidth: 27, frameHeight: 28 });
     this.load.image('arrow', 'assets/Arrow.png');
@@ -89,15 +89,32 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.image('note1', 'assets/music1.png');
     this.load.image('note2', 'assets/note2.png');
 
+    this.load.spritesheet('levelUpInc', 'assets/levelUpapp.png', { frameWidth: 86, frameHeight: 93 });
+    this.load.spritesheet('levelUpDec', 'assets/levelUpdis.png', { frameWidth: 86, frameHeight: 93 });
+
     this.load.image('floor', 'assets/Floor.png');
     this.load.image('background', 'assets/Background.png');
     this.load.image('lava', 'assets/Lava.png');
     this.load.image('foreground', 'assets/Foreground.png');
 
+    this.load.image('paperBackground', 'assets/Paperonbackground.png');
+
     this.load.image('healthBar', 'assets/greenbar.png');
     this.load.image('healthBarFrame', 'assets/lifebarframe.png');
     this.load.image('powerBar', 'assets/powerbar.png');
     this.load.image('powerBarFrame', 'assets/powerbarframe.png');
+
+    this.load.image('optionsButtonUp', 'assets/OptionsButtonUp.png');
+    this.load.image('optionsButtonDown', 'assets/OptionsButtonDown.png');
+    this.load.image('creditsButtonUp', 'assets/CreditsButtonUp.png');
+    this.load.image('creditsButtonDown', 'assets/CreditsButtonDown.png');
+    this.load.image('playButtonUp', 'assets/PlayButtonUp.png');
+    this.load.image('playButtonDown', 'assets/PlayButtonDown.png');
+    this.load.image('menuButtonUp', 'assets/MenuButtonUP.png');
+    this.load.image('menuButtonDown', 'assets/MenuButtonDown.png');
+
+    this.load.image('checkedBox', 'assets/CheckedBox.png');
+    this.load.image('uncheckedBox', 'assets/UnCheckedBox.png');
 
     this.load.image('logo', 'assets/logo.png');
 

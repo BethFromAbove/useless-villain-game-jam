@@ -8,7 +8,7 @@ var defaultFighterCooldown = 1533;
 var defaultRogueCooldown = 1805;
 var defaultBardCooldown = 837;
 
-var maxDemonHealth = 1000;
+var maxDemonHealth = 100;
 var maxDemonPower = 200;
 
 export default class GameScene extends Phaser.Scene {
@@ -202,6 +202,18 @@ export default class GameScene extends Phaser.Scene {
       key: 'note2-default',
       frames: [ { key: 'note2', frame: 0 } ],
       frameRate: 20
+    });
+
+    // Level up animation
+    this.anims.create({
+      key: 'level-up1',
+      frames: this.anims.generateFrameNumbers('levelUpInc', { start: 0, end: 5 }),
+      frameRate: 15
+    });
+    this.anims.create({
+      key: 'level-up2',
+      frames: this.anims.generateFrameNumbers('levelUpDec', { start: 0, end: 5 }),
+      frameRate: 15
     });
   }
 
@@ -558,6 +570,11 @@ export default class GameScene extends Phaser.Scene {
 
   gameEnd() {
     //play animation for hero level up
+    // for (hero in this.heroes) {
+
+    // }
+    // this.scene.physics.add.sprite(200, 300, 'levelUpInc').anims.play('level-up1', true);
+
     //callback function to transition to next screen
   }
 }
