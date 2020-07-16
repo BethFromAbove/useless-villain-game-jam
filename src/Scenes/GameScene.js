@@ -240,14 +240,14 @@ export default class GameScene extends Phaser.Scene {
     this.hero1Cooldown = defaultWizardCooldown;
     this.hero2Cooldown = defaultRangerCooldown;
 
-    this.add.image(0, 0, 'foreground').setOrigin(0, 0);
+    this.add.image(0, 0, 'foreground').setOrigin(0, 0).setDepth(7);
 
-    this.add.image(68, 573, 'barBackground').setOrigin(0, 0);
-    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0);
-    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0);
-    this.add.image(432, 573, 'barBackground').setOrigin(0, 0);
-    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0);
-    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0);
+    this.add.image(68, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0).setDepth(10);
+    this.add.image(432, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0).setDepth(10);
   }
 
   addLevel2() {
@@ -265,14 +265,14 @@ export default class GameScene extends Phaser.Scene {
     this.hero2Cooldown = defaultFighterCooldown;
     this.hero3Cooldown = defaultRogueCooldown;
 
-    this.add.image(0, 0, 'foreground').setOrigin(0, 0);
+    this.add.image(0, 0, 'foreground').setOrigin(0, 0).setDepth(7);
 
-    this.add.image(68, 573, 'barBackground').setOrigin(0, 0);
-    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0);
-    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0);
-    this.add.image(432, 573, 'barBackground').setOrigin(0, 0);
-    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0);
-    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0);
+    this.add.image(68, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0).setDepth(10);
+    this.add.image(432, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0).setDepth(10);
   }
 
   addLevel3() {
@@ -294,14 +294,14 @@ export default class GameScene extends Phaser.Scene {
     this.hero4Cooldown = defaultBardCooldown;
     this.hero5Cooldown = defaultBardCooldown;
 
-    this.add.image(0, 0, 'foreground').setOrigin(0, 0);
+    this.add.image(0, 0, 'foreground').setOrigin(0, 0).setDepth(7);
 
-    this.add.image(68, 573, 'barBackground').setOrigin(0, 0);
-    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0);
-    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0);
-    this.add.image(432, 573, 'barBackground').setOrigin(0, 0);
-    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0);
-    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0);
+    this.add.image(68, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0).setDepth(10);
+    this.add.image(432, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0).setDepth(10);
   }
 
   addLevel4() {
@@ -313,8 +313,8 @@ export default class GameScene extends Phaser.Scene {
 
     this.hero1 = this.createWizard (((0/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
     this.hero2 = this.createRanger (((1/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero3 = this.createFighter(((2/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero4 = this.createRogue  (((3/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero3 = this.createFighter(((2/5) * this.canvas.width) + (this.randWidth() / 4), (420 + (Math.random() * 40)));
+    this.hero4 = this.createRogue  (((3/5) * this.canvas.width) + (this.randWidth() / 4), (320 + (Math.random() * 40)));
     this.hero5 = this.createBard   (((4/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
 
     this.hero1Cooldown = defaultWizardCooldown;
@@ -323,20 +323,21 @@ export default class GameScene extends Phaser.Scene {
     this.hero4Cooldown = defaultRogueCooldown;
     this.hero5Cooldown = defaultBardCooldown;
 
-    this.add.image(0, 0, 'foreground').setOrigin(0, 0);
+    this.add.image(0, 0, 'foreground').setOrigin(0, 0).setDepth(7);
 
-    this.add.image(68, 573, 'barBackground').setOrigin(0, 0);
-    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0);
-    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0);
-    this.add.image(432, 573, 'barBackground').setOrigin(0, 0);
-    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0);
-    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0);
+    this.add.image(68, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0).setDepth(10);
+    this.add.image(432, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0).setDepth(10);
   }
 
   addDemon(x = 400, y = 500) {
     this.demon = this.physics.add.sprite(x, y, 'demon').anims.play('demon-idle', true);
     this.physics.world.enable(this.demon);
     this.demon.body.setCollideWorldBounds(true);
+    this.demon.setDepth(5);
     this.demonHealth = maxDemonHealth;
     this.demonPower = 0;
   }

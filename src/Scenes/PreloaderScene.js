@@ -98,6 +98,7 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.image('foreground', 'assets/Foreground.png');
 
     this.load.image('paperBackground', 'assets/Paperonbackground.png');
+    this.load.image('instructionsBackground', 'assets/MainMenu.png');
     this.load.image('optionsBackground', 'assets/OptionsBackground.png');
     this.load.image('endBackground', 'assets/EndLetter.png');
     this.load.image('creditsBackground', 'assets/CreditsBackground.png');
@@ -112,6 +113,8 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.image('adventureresApproachText', 'assets/AdventurersApproach.png');
     this.load.image('dontKillText', 'assets/dontkillheroes.png');
 
+    this.load.image('backButtonUp', 'assets/BackButtonUp.png');
+    this.load.image('backButtonDown', 'assets/BackButtonDown.png');
     this.load.image('optionsButtonUp', 'assets/OptionsButtonUp.png');
     this.load.image('optionsButtonDown', 'assets/OptionsButtonDown.png');
     this.load.image('creditsButtonUp', 'assets/CreditsButtonUp.png');
