@@ -6,11 +6,9 @@ export default class OptionsScene extends Phaser.Scene {
     super('Options');
   }
 
-
   create() {
     this.model = this.sys.game.globals.model;
     const { config } = this.game;
-
 
     this.add.image(config.width / 2, config.height / 2, 'optionsBackground');
 
