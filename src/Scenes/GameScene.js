@@ -333,13 +333,18 @@ export default class GameScene extends Phaser.Scene {
     this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0).setDepth(10);
   }
 
-  addDemon(x = 400, y = 500) {
+  addDemon(x = 400, y = 700) {
     this.demon = this.physics.add.sprite(x, y, 'demon').anims.play('demon-idle', true);
+    this.demon.setSize(190, 150);
     this.physics.world.enable(this.demon);
-    this.demon.body.setCollideWorldBounds(true);
     this.demon.setDepth(5);
     this.demonHealth = maxDemonHealth;
     this.demonPower = 0;
+    this.tweens.add({
+      targets: this.demon,
+      duration: 1500,
+      y: 500
+    });
   }
 
   createWizard(x = 0, y = 220) {
@@ -595,23 +600,25 @@ export default class GameScene extends Phaser.Scene {
   }
 
   projectileHitDemon(demon, projectile) {
-    switch (projectile.name) {
+    if (projectile.y >= 500) {
+      switch (projectile.name) {
       case 'fireball':
-      this.demonHealth -= 10;
-      break;
+        this.demonHealth -= 10;
+        break;
       case 'arrow':
-      this.demonHealth -= 50;
-      break;
+        this.demonHealth -= 50;
+        break;
       case 'dagger':
-      this.demonHealth -= 20;
-      break;
+        this.demonHealth -= 20;
+        break;
       case 'note1':
       case 'note2':
-      this.demonHealth -= 1;
-      break;
+        this.demonHealth -= 1;
+        break;
+      }
+      this.healthBar.setScale(Math.max(this.demonHealth/maxDemonHealth, 0), 1);
+      projectile.destroy();
     }
-    this.healthBar.setScale(Math.max(this.demonHealth/maxDemonHealth, 0), 1);
-    projectile.destroy();
   }
 
   fighterAttack(hero) {
