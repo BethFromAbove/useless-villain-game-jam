@@ -100,10 +100,15 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.image('paperBackground', 'assets/Paperonbackground.png');
     this.load.image('optionsBackground', 'assets/OptionsBackground.png');
 
+    this.load.image('barBackground', 'assets/barbackground.png');
     this.load.image('healthBar', 'assets/greenbar.png');
-    this.load.image('healthBarFrame', 'assets/lifebarframe.png');
+    this.load.image('healthBarFrame', 'assets/powerbarframe.png');
     this.load.image('powerBar', 'assets/powerbar.png');
     this.load.image('powerBarFrame', 'assets/powerbarframe.png');
+
+    this.load.image('goodWorkText', 'assets/keepitup.png');
+    this.load.image('adventureresApproachText', 'assets/AdventurersApproach.png');
+    this.load.image('dontKillText', 'assets/Rememberlevel1.png');
 
     this.load.image('optionsButtonUp', 'assets/OptionsButtonUp.png');
     this.load.image('optionsButtonDown', 'assets/OptionsButtonDown.png');
