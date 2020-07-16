@@ -65,23 +65,22 @@ export default class PreloaderScene extends Phaser.Scene {
     });
 
     // load images here
-
     this.load.spritesheet('demon', 'assets/demonRest.png', { frameWidth: 200, frameHeight: 200 });
     this.load.spritesheet('demonFaint', 'assets/demonfaint.png', { frameWidth: 200, frameHeight: 200 });
     this.load.spritesheet('demonAttack', 'assets/demonHandRaise.png', { frameWidth: 200, frameHeight: 200 });
     this.load.spritesheet('demonFireball', 'assets/demonfire.png', { frameWidth: 42, frameHeight: 86 });
 
-    this.load.spritesheet('wizard', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
-    this.load.spritesheet('ranger', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
-    this.load.spritesheet('fighter', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
+    this.load.spritesheet('wizard', 'assets/Wizardwalking.png', { frameWidth: 70, frameHeight: 137 });
+    this.load.spritesheet('ranger', 'assets/rangerwalking.png', { frameWidth: 71, frameHeight: 120 });
+    this.load.spritesheet('fighter', 'assets/knightwalking.png', { frameWidth: 76, frameHeight: 113 });
     this.load.spritesheet('rogue', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
-    this.load.spritesheet('bard', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
+    this.load.spritesheet('bard', 'assets/bardwalking.png', { frameWidth: 73, frameHeight: 121 });
 
     this.load.spritesheet('wizardAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
-    this.load.spritesheet('rangerAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
-    this.load.spritesheet('fighterAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
-    this.load.spritesheet('rogueAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
-    this.load.spritesheet('bardAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
+    this.load.spritesheet('rangerAttack', 'assets/bowsprite.png', { frameWidth: 84, frameHeight: 125 });
+    this.load.spritesheet('fighterAttack', 'assets/swordsprite.png', { frameWidth: 110, frameHeight: 114 });
+    this.load.spritesheet('rogueAttack', 'assets/stabbingsprite.png', { frameWidth: 72, frameHeight: 113 });
+    this.load.spritesheet('bardAttack', 'assets/bardplayingsprite.png', { frameWidth: 75, frameHeight: 140 });
 
     this.load.spritesheet('fireball', 'assets/wizardspell.png', { frameWidth: 27, frameHeight: 28 });
     this.load.image('arrow', 'assets/Arrow.png');
@@ -89,25 +88,58 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.image('note1', 'assets/music1.png');
     this.load.image('note2', 'assets/note2.png');
 
+    this.load.spritesheet('levelUpInc', 'assets/LevelUpapp.png', { frameWidth: 86, frameHeight: 93 });
+    this.load.spritesheet('levelUpDec', 'assets/LevelUpdis.png', { frameWidth: 86, frameHeight: 93 });
+
     this.load.image('floor', 'assets/Floor.png');
     this.load.image('background', 'assets/Background.png');
     this.load.image('lava', 'assets/Lava.png');
     this.load.image('foreground', 'assets/Foreground.png');
 
+    this.load.image('titleBackground', 'assets/mainmenulogo.png');
+    this.load.image('instructionsBackground', 'assets/MainMenucave.png');
+    this.load.image('optionsBackground', 'assets/OptionsBackgroundCave.png');
+    this.load.image('endBackground', 'assets/EndLettercave.png');
+    this.load.image('creditsBackground', 'assets/CreditsBackgroundCave.png');
+
+    this.load.image('barBackground', 'assets/barbackground.png');
     this.load.image('healthBar', 'assets/greenbar.png');
-    this.load.image('healthBarFrame', 'assets/lifebarframe.png');
+    this.load.image('healthBarFrame', 'assets/powerbarframe.png');
     this.load.image('powerBar', 'assets/powerbar.png');
     this.load.image('powerBarFrame', 'assets/powerbarframe.png');
+
+    this.load.image('goodWorkText', 'assets/keepitup.png');
+    this.load.image('adventureresApproachText', 'assets/AdventurersApproach.png');
+    this.load.image('dontKillText', 'assets/dontkillheroes.png');
+
+    this.load.image('backButtonUp', 'assets/BackButtonUp.png');
+    this.load.image('backButtonDown', 'assets/BackButtonDown.png');
+    this.load.image('optionsButtonUp', 'assets/OptionsButtonUp.png');
+    this.load.image('optionsButtonDown', 'assets/OptionsButtonDown.png');
+    this.load.image('creditsButtonUp', 'assets/CreditsButtonUp.png');
+    this.load.image('creditsButtonDown', 'assets/CreditsButtonDown.png');
+    this.load.image('playButtonUp', 'assets/PlayButtonUp.png');
+    this.load.image('playButtonDown', 'assets/PlayButtonDown.png');
+    this.load.image('menuButtonUp', 'assets/MenuButtonUP.png');
+    this.load.image('menuButtonDown', 'assets/MenuButtonDown.png');
+
+    this.load.image('checkedBox', 'assets/CheckedBox.png');
+    this.load.image('uncheckedBox', 'assets/UnCheckedBox.png');
 
     this.load.image('logo', 'assets/logo.png');
 
     // Audio
     this.load.audio('bgMusic', ['assets/audio/theme.mp3']);
-    
+    this.load.audio('bossFight', ['assets/audio/boss_music.mp3']);    
+    this.load.audio('levelUp', ['assets/audio/level_up.mp3']);    
+    this.load.audio('failureNoise', ['assets/audio/failure_noise.mp3']);    
 
     // remove progress bar when complete
     this.load.on('complete', () => {
       this.game.registry.set('bgMusic', this.sound.add('bgMusic', { volume: 0.5, loop: true }));
+      this.game.registry.set('bossFight', this.sound.add('bossFight', { volume: 0.3, loop: true }));
+      this.game.registry.set('levelUp', this.sound.add('levelUp', { volume: 0.5 }));
+      this.game.registry.set('failureNoise', this.sound.add('failureNoise', { volume: 0.7 }));
       this.ready();
     });
   }

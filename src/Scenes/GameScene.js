@@ -4,11 +4,11 @@ import 'phaser';
 // syncing.
 var defaultWizardCooldown = 2812;
 var defaultRangerCooldown = 2278;
-var defaultFighterCooldown = 1533;
+var defaultFighterCooldown = 2133;
 var defaultRogueCooldown = 1805;
-var defaultBardCooldown = 837;
+var defaultBardCooldown = 1237;
 
-var maxDemonHealth = 1000;
+var maxDemonHealth = 500;
 var maxDemonPower = 200;
 
 export default class GameScene extends Phaser.Scene {
@@ -33,10 +33,23 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     const { config } = this.game;
+    this.model = this.sys.game.globals.model;
+
+    if (this.model.musicOn === true && this.model.currentMusic === 'bgMusic') {
+      this.game.registry.get('bgMusic').stop();
+      this.game.registry.get('bossFight').play();
+      this.model.currentMusic = 'bossFight';
+    }
 
     this.gameEnded = false;
 
     this.createAnims();
+
+    this.hero1 = null;
+    this.hero2 = null;
+    this.hero3 = null;
+    this.hero4 = null;
+    this.hero5 = null;
 
     this.hero1FiredAt = Date.now();
     this.hero2FiredAt = Date.now();
@@ -50,7 +63,6 @@ export default class GameScene extends Phaser.Scene {
     this.heroes = new Phaser.GameObjects.Group(this);
     this.demonFireballs = new Phaser.GameObjects.Group(this);
 
-    this.model = this.sys.game.globals.model;
     switch (this.model.level) {
       case 1:
       this.addLevel1();
@@ -99,9 +111,8 @@ export default class GameScene extends Phaser.Scene {
       frameRate: 7
     });
     this.anims.create({
-      key: 'demon-attack',
-      frames: this.anims.generateFrameNumbers('demonAttack', { start: 0, end: 7 }),
-      yoyo: true,
+      key: 'demon-attack-down',
+      frames: this.anims.generateFrameNumbers('demonAttack', { start: 7, end: 0 }),
       frameRate: 20
     });
     this.anims.create({
@@ -203,6 +214,18 @@ export default class GameScene extends Phaser.Scene {
       frames: [ { key: 'note2', frame: 0 } ],
       frameRate: 20
     });
+
+    // Level up animation
+    this.anims.create({
+      key: 'level-up-inc',
+      frames: this.anims.generateFrameNumbers('levelUpInc', { start: 0, end: 5 }),
+      frameRate: 15
+    });
+    this.anims.create({
+      key: 'level-up-dec',
+      frames: this.anims.generateFrameNumbers('levelUpDec', { start: 0, end: 5 }),
+      frameRate: 15
+    });
   }
 
   toggleDebugMode() {
@@ -216,28 +239,47 @@ export default class GameScene extends Phaser.Scene {
 
     this.addDemon();
 
-    this.hero1 = this.createWizard (((0/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero2 = this.createRanger (((1/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero3 = this.createFighter(((2/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero4 = this.createRogue  (((3/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero5 = this.createBard   (((4/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero1 = this.createRanger(((0/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero2 = this.createWizard(((1/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero3 = this.createRanger(((2/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
 
-    this.hero1Cooldown = defaultWizardCooldown;
-    this.hero2Cooldown = defaultRangerCooldown;
-    this.hero3Cooldown = defaultFighterCooldown;
-    this.hero4Cooldown = defaultRogueCooldown;
-    this.hero5Cooldown = defaultBardCooldown;
+    this.hero1Cooldown = defaultRangerCooldown;
+    this.hero2Cooldown = defaultWizardCooldown;
+    this.hero3Cooldown = defaultRangerCooldown;
 
-    this.add.image(0, 0, 'foreground').setOrigin(0, 0);
-    this.healthBar = this.add.image(220, 570, 'healthBar').setOrigin(0, 0);
-    this.add.image(220, 570, 'healthBarFrame').setOrigin(0, 0);
-    this.powerBar = this.add.image(420, 570, 'powerBar').setOrigin(0, 0);
-    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0);
+    this.add.image(0, 0, 'foreground').setOrigin(0, 0).setDepth(7);
+
+    this.add.image(68, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0).setDepth(10);
+    this.add.image(432, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0).setDepth(10);
   }
 
   addLevel2() {
-    this.levelBackground = this.add.image(0, 0, 'background-level2').setOrigin(0, 0);
+    this.add.image(0, 0, 'floor').setOrigin(0, 0);
+    this.add.image(0, 0, 'background').setOrigin(0, 0);
+    this.add.image(0, 0, 'lava').setOrigin(0, 0);
+
     this.addDemon();
+
+    this.hero1 = this.createFighter(((0/3) * this.canvas.width) + (this.randWidth() / 4), (420 + (Math.random() * 40)));
+    this.hero2 = this.createWizard (((1/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero3 = this.createRogue  (((2/3) * this.canvas.width) + (this.randWidth() / 4), (320 + (Math.random() * 40)));
+
+    this.hero1Cooldown = defaultFighterCooldown;
+    this.hero2Cooldown = defaultWizardCooldown;
+    this.hero3Cooldown = defaultRogueCooldown;
+
+    this.add.image(0, 0, 'foreground').setOrigin(0, 0).setDepth(7);
+
+    this.add.image(68, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0).setDepth(10);
+    this.add.image(432, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0).setDepth(10);
   }
 
   addLevel3() {
@@ -259,62 +301,132 @@ export default class GameScene extends Phaser.Scene {
     this.hero4Cooldown = defaultBardCooldown;
     this.hero5Cooldown = defaultBardCooldown;
 
-    this.add.image(0, 0, 'foreground').setOrigin(0, 0);
-    this.healthBar = this.add.image(220, 570, 'healthBar').setOrigin(0, 0);
-    this.add.image(220, 570, 'healthBarFrame').setOrigin(0, 0);
-    this.powerBar = this.add.image(420, 570, 'powerBar').setOrigin(0, 0);
-    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0);
+    this.add.image(0, 0, 'foreground').setOrigin(0, 0).setDepth(7);
+
+    this.add.image(68, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0).setDepth(10);
+    this.add.image(432, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0).setDepth(10);
   }
 
-  addDemon(x = 400, y = 500) {
+  addLevel4() {
+    this.add.image(0, 0, 'floor').setOrigin(0, 0);
+    this.add.image(0, 0, 'background').setOrigin(0, 0);
+    this.add.image(0, 0, 'lava').setOrigin(0, 0);
+
+    this.addDemon();
+
+    this.hero1 = this.createWizard (((0/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero2 = this.createRanger (((1/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero3 = this.createFighter(((2/5) * this.canvas.width) + (this.randWidth() / 4), (420 + (Math.random() * 40)));
+    this.hero4 = this.createRogue  (((3/5) * this.canvas.width) + (this.randWidth() / 4), (320 + (Math.random() * 40)));
+    this.hero5 = this.createBard   (((4/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+
+    this.hero1Cooldown = defaultWizardCooldown;
+    this.hero2Cooldown = defaultRangerCooldown;
+    this.hero3Cooldown = defaultFighterCooldown;
+    this.hero4Cooldown = defaultRogueCooldown;
+    this.hero5Cooldown = defaultBardCooldown;
+
+    this.add.image(0, 0, 'foreground').setOrigin(0, 0).setDepth(7);
+
+    this.add.image(68, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0).setDepth(10);
+    this.add.image(432, 573, 'barBackground').setOrigin(0, 0).setDepth(8);
+    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0).setDepth(9);
+    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0).setDepth(10);
+  }
+
+  addDemon(x = 400, y = 700) {
     this.demon = this.physics.add.sprite(x, y, 'demon').anims.play('demon-idle', true);
+    this.demon.setSize(190, 150);
     this.physics.world.enable(this.demon);
-    this.demon.body.setCollideWorldBounds(true);
+    this.demon.setDepth(5);
     this.demonHealth = maxDemonHealth;
     this.demonPower = 0;
+    this.tweens.add({
+      targets: this.demon,
+      duration: 1500,
+      y: 500,
+      onCompleteParams: [this.demon],
+      onComplete: (tween, target, demon) => {demon.setCollideWorldBounds(true);}
+    });
   }
 
-  createWizard(x = 50, y = 100) {
-    var wizard = this.physics.add.sprite(x, y, 'wizard').anims.play('wizard-idle', true);
+  createWizard(x = 0, y = 220) {
+    var wizard = this.physics.add.sprite(0, 260, 'wizard').anims.play('wizard-idle', true);
     wizard.name = 'wizard';
     this.physics.world.enable(wizard);
     wizard.body.setCollideWorldBounds(true);
+    this.tweens.add({
+      targets: wizard,
+      duration: 2000,
+      y: y,
+      x: x
+    });
     this.heroes.add(wizard);
     return wizard;
   }
 
-  createRanger(x = 100, y = 100) {
-    var ranger = this.physics.add.sprite(x, y, 'ranger').anims.play('ranger-idle', true);
+  createRanger(x = 0, y = 220) {
+    var ranger = this.physics.add.sprite(0, 260, 'ranger').anims.play('ranger-idle', true);
     ranger.name = 'ranger';
     this.physics.world.enable(ranger);
     ranger.body.setCollideWorldBounds(true);
+    this.tweens.add({
+      targets: ranger,
+      duration: 2000,
+      y: y,
+      x: x
+    });
     this.heroes.add(ranger);
     return ranger;
   }
 
-  createFighter(x = 150, y = 100) {
-    var fighter = this.physics.add.sprite(x, y, 'fighter').anims.play('fighter-idle', true);
+  createFighter(x = 0, y = 220) {
+    var fighter = this.physics.add.sprite(0, 260, 'fighter').anims.play('fighter-idle', true);
     fighter.name = 'fighter';
     this.physics.world.enable(fighter);
     fighter.body.setCollideWorldBounds(true);
+    this.tweens.add({
+      targets: fighter,
+      duration: 2000,
+      y: y,
+      x: x
+    });
     this.heroes.add(fighter);
     return fighter;
   }
 
-  createRogue(x = 200, y = 100) {
-    var rogue = this.physics.add.sprite(x, y, 'rogue').anims.play('rogue-idle', true);
+  createRogue(x = 0, y = 220) {
+    var rogue = this.physics.add.sprite(0, 260, 'rogue').anims.play('rogue-idle', true);
     rogue.name = 'rogue';
     this.physics.world.enable(rogue);
     rogue.body.setCollideWorldBounds(true);
+    this.tweens.add({
+      targets: rogue,
+      duration: 2000,
+      y: y,
+      x: x
+    });
     this.heroes.add(rogue);
     return rogue;
   }
 
-  createBard(x = 200, y = 100) {
-    var bard = this.physics.add.sprite(x, y, 'bard').anims.play('bard-idle', true);
+  createBard(x = 0, y = 220) {
+    var bard = this.physics.add.sprite(0, 260, 'bard').anims.play('bard-idle', true);
     bard.name = 'bard';
     this.physics.world.enable(bard);
     bard.body.setCollideWorldBounds(true);
+    this.tweens.add({
+      targets: bard,
+      duration: 2000,
+      y: y,
+      x: x
+    });
     this.heroes.add(bard);
     return bard;
   }
@@ -325,16 +437,18 @@ export default class GameScene extends Phaser.Scene {
       //end the game
       this.gameEnded = true;
       this.demon.anims.play('demon-faint', true);
-      this.demon.on('animationcomplete', this.gameEnd);
+      this.demon.anims.stopOnFrame(8);
+      this.demon.body.setVelocityX(0);
+      this.demon.once('animationcomplete', this.gameEnd);
     }
 
     if (!this.gameEnded) {
       // Move Demon based on arrow keys
       if (this.cursors.left.isDown) {
-        this.demon.body.setVelocityX(-300);
+        this.demon.body.setVelocityX(-400);
       }
       else if (this.cursors.right.isDown) {
-        this.demon.body.setVelocityX(300);
+        this.demon.body.setVelocityX(400);
       }
       else {
         this.demon.body.setVelocityX(0);
@@ -351,23 +465,23 @@ export default class GameScene extends Phaser.Scene {
       // Heroes attack at different intervals
       var now = Date.now();
 
-      if (now > (this.hero1FiredAt + this.hero1Cooldown)) {
+      if ((this.hero1 !== null) && (now > (this.hero1FiredAt + this.hero1Cooldown))) {
         this.attack(this.hero1);
         this.hero1FiredAt = now;
       }
-      if (now > (this.hero2FiredAt + this.hero2Cooldown)) {
+      if ((this.hero2 !== null) && (now > (this.hero2FiredAt + this.hero2Cooldown))) {
         this.attack(this.hero2);
         this.hero2FiredAt = now;
       }
-      if (now > (this.hero3FiredAt + this.hero3Cooldown)) {
+      if ((this.hero3 !== null) && (now > (this.hero3FiredAt + this.hero3Cooldown))) {
         this.attack(this.hero3);
         this.hero3FiredAt = now;
       }
-      if (now > (this.hero4FiredAt + this.hero4Cooldown)) {
+      if ((this.hero4 !== null) && (now > (this.hero4FiredAt + this.hero4Cooldown))) {
         this.attack(this.hero4);
         this.hero4FiredAt = now;
       }
-      if (now > (this.hero5FiredAt + this.hero5Cooldown)) {
+      if ((this.hero5 !== null) && (now > (this.hero5FiredAt + this.hero5Cooldown))) {
         this.attack(this.hero5);
         this.hero5FiredAt = now;
       }
@@ -395,22 +509,51 @@ export default class GameScene extends Phaser.Scene {
   }
 
   demonAttack() {
-    this.demon.anims.play('demon-attack', true);
-    this.demon.on('animationcomplete', () => {this.demon.anims.play('demon-idle', true)});
+    this.demon.anims.play('demon-attack-down', true);
+    this.demon.once('animationcomplete', () => {this.demon.anims.play('demon-idle')});
 
     var demonFireball = this.physics.add.sprite((this.demon.x + 60), this.demon.y, 'demonFireball').anims.play('demon-fireball', true);
-    demonFireball.body.setVelocityY(-300);
+    demonFireball.body.setVelocityY(-500);
     this.demonFireballs.add(demonFireball);
   }
 
   killHero(fireball, hero) {
+    var scene = this;
     fireball.destroy();
+    scene.demon.body.setVelocityX(0);
 
     hero.setTint(0xff0000);
-    this.gameEnded = true;
+    scene.gameEnded = true;
 
-    var timer = this.time.delayedCall(1000, () => {
-      console.log("end of game");
+    if (this.model.soundOn === true) {
+      this.game.registry.get('failureNoise').play();
+    }
+
+    var timer = scene.time.delayedCall(1000, () => {
+      //replay level
+      var text = scene.add.image(70, -100, 'dontKillText').setOrigin(0, 0);
+      scene.tweens.add({
+        targets: text,
+        duration: 2000,
+        y: 300,
+        completeDelay: 1500,
+        onCompleteParams: [text],
+        onComplete: (tween, target, text) => {
+          text.destroy();
+          var target = 'Game';
+          scene.cameras.main.fadeOut(500);
+          scene.cameras.main.once(
+            Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+            () => {
+              scene.scene.start(target);
+              scene.scene.get(target).events.once(
+                Phaser.Scenes.Events.CREATE,
+                () => scene.scene.get(target).cameras.main.fadeIn(500),
+                );
+            },
+            );
+        }
+      })
     }, [], this);  // delay in ms 
   }
 
@@ -418,7 +561,16 @@ export default class GameScene extends Phaser.Scene {
   */
   attack(hero) {
     hero.anims.play(hero.name + '-attack', true);
-    hero.on('animationcomplete', () => {hero.anims.play(hero.name + '-idle', true)});
+    hero.once('animationcomplete', () => {
+      hero.anims.play(hero.name + '-idle', true)
+
+      // Reposition hero
+      this.tweens.add({
+        targets: hero,
+        duration: 1000,
+        x: hero.x + (this.randWidth() * (0.6 * (0.5 - Math.random())))
+      });
+    });
     switch (hero.name) {
       case 'wizard':
       this.fireProjectile(hero, 'fireball');
@@ -433,11 +585,9 @@ export default class GameScene extends Phaser.Scene {
       this.rogueAttack(hero);
       break;
       case 'bard':
-      if (Math.random() <= 0.5) {
-        this.fireProjectile(hero, 'note1');
-      } else {
-        this.fireProjectile(hero, 'note2');
-      }
+      this.fireProjectile(hero, 'note1');
+      this.fireProjectile(hero, 'note1');
+      this.fireProjectile(hero, 'note2');
       break
     }
   }
@@ -472,23 +622,25 @@ export default class GameScene extends Phaser.Scene {
   }
 
   projectileHitDemon(demon, projectile) {
-    switch (projectile.name) {
+    if (!this.gameEnded && projectile.y >= 500) {
+      switch (projectile.name) {
       case 'fireball':
-      this.demonHealth -= 10;
-      break;
+        this.demonHealth -= 90;
+        break;
       case 'arrow':
-      this.demonHealth -= 50;
-      break;
+        this.demonHealth -= 50;
+        break;
       case 'dagger':
-      this.demonHealth -= 20;
-      break;
+        this.demonHealth -= 20;
+        break;
       case 'note1':
       case 'note2':
-      this.demonHealth -= 1;
-      break;
+        this.demonHealth -= 5;
+        break;
+      }
+      this.healthBar.setScale(Math.max(this.demonHealth/maxDemonHealth, 0), 1);
+      projectile.destroy();
     }
-    this.healthBar.setScale(Math.max(this.demonHealth/maxDemonHealth, 0), 1);
-    projectile.destroy();
   }
 
   fighterAttack(hero) {
@@ -522,31 +674,31 @@ export default class GameScene extends Phaser.Scene {
    * effective ranges as well as different easing functions.
    */
    stab(hero, range) {
-    var easingFn = 'Power0';
-    var damage = 0;
-    switch (hero.name) {
-      case 'fighter':
-      easingFn = Phaser.Math.Easing.Elastic.InOut;
-      damage = 30;
-      break;
-      case 'rogue':
-      easingFn = Phaser.Math.Easing.Expo.In;
-      damage = 45;
-      break;
-    }
-
-    this.tweens.add({
-      targets: hero,
-      duration: 300,
-      y: hero.y + range,
-      ease: easingFn,
-      yoyo: true,
-      onYoyo: this.checkStab,
-      onYoyoParams: [hero.x, damage],
-      onYoyoScope: this
-    });
-    // @TODO: check if in line with Demon and reduce health according
-    // to hero strength or something.
+     var easingFn = 'Power0';
+     var damage = 0;
+     switch (hero.name) {
+     case 'fighter':
+       easingFn = Phaser.Math.Easing.Elastic.InOut;
+       damage = 40;
+       break;
+     case 'rogue':
+       easingFn = Phaser.Math.Easing.Expo.In;
+       damage = 25;
+       break;
+     }
+     
+     this.tweens.add({
+       targets: hero,
+       duration: 300,
+       y: hero.y + range,
+       ease: easingFn,
+       yoyo: true,
+       onYoyo: this.checkStab,
+       onYoyoParams: [hero.x, damage],
+       onYoyoScope: this
+     });
+     // @TODO: check if in line with Demon and reduce health according
+     // to hero strength or something.
   }
 
   checkStab(tween, target, x, damage) {
@@ -557,7 +709,68 @@ export default class GameScene extends Phaser.Scene {
   }
 
   gameEnd() {
+    var scene = this.scene;
+
     //play animation for hero level up
-    //callback function to transition to next screen
+    scene.heroes.children.each((h) => {
+      var levelUpSprite = this.scene.physics.add.sprite(h.x, (h.y - 100), 'levelUpInc').anims.play('level-up-inc', true);
+      levelUpSprite.once('animationcomplete', () => {
+        levelUpSprite.setTexture('levelUpDec').anims.play('level-up-dec', true);
+        levelUpSprite.once('animationcomplete', () => {
+          levelUpSprite.destroy();
+          scene.tweens.add({
+            targets: h,
+            duration: 2000,
+            y: 260,
+            x: 800,
+            onCompleteParams: [h],
+            onComplete: (tween, target, hero) => {hero.destroy()}
+          });
+        });
+      });
+    });
+
+    // play level up sound
+    if (scene.model.soundOn === true) {
+      scene.game.registry.get('levelUp').play();
+    }
+
+    var text = scene.add.image(170, -100, 'goodWorkText').setOrigin(0, 0);
+    scene.tweens.add({
+      targets: text,
+      duration: 2000,
+      y: 300,
+      completeDelay: 1500,
+      onCompleteParams: [text],
+      onComplete: (tween, target, text) => {
+        text.destroy();
+        scene.model.level++;
+        if (scene.model.level <= 4) {
+          var target = 'Game';
+          scene.cameras.main.fadeOut(500);
+          scene.cameras.main.once(
+            Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+            () => {
+              scene.scene.start(target);
+              scene.scene.get(target).events.once(
+                Phaser.Scenes.Events.CREATE,
+                () => scene.scene.get(target).cameras.main.fadeIn(500),
+                );
+            });
+        } else {
+          var target = 'End';
+          scene.cameras.main.fadeOut(500);
+          scene.cameras.main.once(
+            Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+            () => {
+              scene.scene.start(target);
+              scene.scene.get(target).events.once(
+                Phaser.Scenes.Events.CREATE,
+                () => scene.scene.get(target).cameras.main.fadeIn(500),
+                );
+            });
+        }
+      }
+    })
   }
 }
