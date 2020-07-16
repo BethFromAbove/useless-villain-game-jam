@@ -8,7 +8,7 @@ var defaultFighterCooldown = 1533;
 var defaultRogueCooldown = 1805;
 var defaultBardCooldown = 1237;
 
-var maxDemonHealth = 100;
+var maxDemonHealth = 400;
 var maxDemonPower = 200;
 
 export default class GameScene extends Phaser.Scene {
@@ -105,9 +105,8 @@ export default class GameScene extends Phaser.Scene {
       frameRate: 7
     });
     this.anims.create({
-      key: 'demon-attack',
-      frames: this.anims.generateFrameNumbers('demonAttack', { start: 0, end: 7 }),
-      yoyo: true,
+      key: 'demon-attack-down',
+      frames: this.anims.generateFrameNumbers('demonAttack', { start: 7, end: 0 }),
       frameRate: 20
     });
     this.anims.create({
@@ -257,12 +256,12 @@ export default class GameScene extends Phaser.Scene {
 
     this.addDemon();
 
-    this.hero1 = this.createWizard (((0/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero2 = this.createFighter(((1/3) * this.canvas.width) + (this.randWidth() / 4), (420 + (Math.random() * 40)));
+    this.hero1 = this.createFighter(((0/3) * this.canvas.width) + (this.randWidth() / 4), (420 + (Math.random() * 40)));
+    this.hero2 = this.createWizard (((1/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
     this.hero3 = this.createRogue  (((2/3) * this.canvas.width) + (this.randWidth() / 4), (320 + (Math.random() * 40)));
 
-    this.hero1Cooldown = defaultWizardCooldown;
-    this.hero2Cooldown = defaultFighterCooldown;
+    this.hero1Cooldown = defaultFighterCooldown;
+    this.hero2Cooldown = defaultWizardCooldown;
     this.hero3Cooldown = defaultRogueCooldown;
 
     this.add.image(0, 0, 'foreground').setOrigin(0, 0).setDepth(7);
@@ -500,7 +499,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   demonAttack() {
-    this.demon.anims.play('demon-attack', true);
+    this.demon.anims.play('demon-attack-down', true);
     this.demon.once('animationcomplete', () => {this.demon.anims.play('demon-idle')});
 
     var demonFireball = this.physics.add.sprite((this.demon.x + 60), this.demon.y, 'demonFireball').anims.play('demon-fireball', true);
@@ -548,7 +547,16 @@ export default class GameScene extends Phaser.Scene {
   */
   attack(hero) {
     hero.anims.play(hero.name + '-attack', true);
-    hero.once('animationcomplete', () => {hero.anims.play(hero.name + '-idle', true)});
+    hero.once('animationcomplete', () => {
+      hero.anims.play(hero.name + '-idle', true)
+
+      // Reposition hero
+      this.tweens.add({
+        targets: hero,
+        duration: 1000,
+        x: hero.x + (this.randWidth() * (0.8 * (0.5 - Math.random())))
+      });
+    });
     switch (hero.name) {
       case 'wizard':
       this.fireProjectile(hero, 'fireball');
@@ -613,7 +621,7 @@ export default class GameScene extends Phaser.Scene {
         break;
       case 'note1':
       case 'note2':
-        this.demonHealth -= 1;
+        this.demonHealth -= 5;
         break;
       }
       this.healthBar.setScale(Math.max(this.demonHealth/maxDemonHealth, 0), 1);
