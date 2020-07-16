@@ -3,7 +3,7 @@ import PhaserMatterCollisionPlugin from 'phaser-matter-collision-plugin';
 
 export default {
   type: Phaser.AUTO,
-  autoCenter: true,
+  autoCenter: Phaser.Scale.Center.CENTER_HORIZONTALLY,
   dom: {
     createContainer: true,
   },
