@@ -79,7 +79,7 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.spritesheet('wizardAttack', 'assets/wizardspellsprite.png', { frameWidth: 88, frameHeight: 138 });
     this.load.spritesheet('rangerAttack', 'assets/bowsprite.png', { frameWidth: 84, frameHeight: 125 });
     this.load.spritesheet('fighterAttack', 'assets/swordsprite.png', { frameWidth: 110, frameHeight: 114 });
-    this.load.spritesheet('rogueAttack', 'assets/rougewalking.png', { frameWidth: 72, frameHeight: 113 });
+    this.load.spritesheet('rogueAttack', 'assets/stabbingsprite.png', { frameWidth: 72, frameHeight: 113 });
     this.load.spritesheet('bardAttack', 'assets/bardplayingsprite.png', { frameWidth: 75, frameHeight: 140 });
 
     this.load.spritesheet('fireball', 'assets/wizardspell.png', { frameWidth: 27, frameHeight: 28 });
@@ -98,9 +98,9 @@ export default class PreloaderScene extends Phaser.Scene {
 
     this.load.image('titleBackground', 'assets/mainmenulogo.png');
     this.load.image('instructionsBackground', 'assets/MainMenucave.png');
-    this.load.image('optionsBackground', 'assets/OptionsBackground.png');
+    this.load.image('optionsBackground', 'assets/OptionsBackgroundCave.png');
     this.load.image('endBackground', 'assets/EndLettercave.png');
-    this.load.image('creditsBackground', 'assets/CreditsBackground.png');
+    this.load.image('creditsBackground', 'assets/CreditsBackgroundCave.png');
 
     this.load.image('barBackground', 'assets/barbackground.png');
     this.load.image('healthBar', 'assets/greenbar.png');
@@ -130,11 +130,16 @@ export default class PreloaderScene extends Phaser.Scene {
 
     // Audio
     this.load.audio('bgMusic', ['assets/audio/theme.mp3']);
-    
+    this.load.audio('bossFight', ['assets/audio/boss_music.mp3']);    
+    this.load.audio('levelUp', ['assets/audio/level_up.mp3']);    
+    this.load.audio('failureNoise', ['assets/audio/failure_noise.mp3']);    
 
     // remove progress bar when complete
     this.load.on('complete', () => {
       this.game.registry.set('bgMusic', this.sound.add('bgMusic', { volume: 0.5, loop: true }));
+      this.game.registry.set('bossFight', this.sound.add('bossFight', { volume: 0.3, loop: true }));
+      this.game.registry.set('levelUp', this.sound.add('levelUp', { volume: 0.5 }));
+      this.game.registry.set('failureNoise', this.sound.add('failureNoise', { volume: 0.7 }));
       this.ready();
     });
   }
