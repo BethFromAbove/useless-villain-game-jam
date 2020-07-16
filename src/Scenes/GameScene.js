@@ -38,6 +38,12 @@ export default class GameScene extends Phaser.Scene {
 
     this.createAnims();
 
+    this.hero1 = null;
+    this.hero2 = null;
+    this.hero3 = null;
+    this.hero4 = null;
+    this.hero5 = null;
+
     this.hero1FiredAt = Date.now();
     this.hero2FiredAt = Date.now();
     this.hero3FiredAt = Date.now();
@@ -252,8 +258,8 @@ export default class GameScene extends Phaser.Scene {
     this.addDemon();
 
     this.hero1 = this.createWizard (((0/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero2 = this.createFighter(((1/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero3 = this.createRogue  (((2/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero2 = this.createFighter(((1/3) * this.canvas.width) + (this.randWidth() / 4), (420 + (Math.random() * 40)));
+    this.hero3 = this.createRogue  (((2/3) * this.canvas.width) + (this.randWidth() / 4), (320 + (Math.random() * 40)));
 
     this.hero1Cooldown = defaultWizardCooldown;
     this.hero2Cooldown = defaultFighterCooldown;
@@ -417,7 +423,8 @@ export default class GameScene extends Phaser.Scene {
       this.gameEnded = true;
       this.demon.anims.play('demon-faint', true);
       this.demon.anims.stopOnFrame(8);
-      this.demon.on('animationcomplete', this.gameEnd);
+      this.demon.body.setVelocityX(0);
+      this.demon.once('animationcomplete', this.gameEnd);
     }
 
     if (!this.gameEnded) {
@@ -443,23 +450,23 @@ export default class GameScene extends Phaser.Scene {
       // Heroes attack at different intervals
       var now = Date.now();
 
-      if (now > (this.hero1FiredAt + this.hero1Cooldown)) {
+      if ((this.hero1 !== null) && (now > (this.hero1FiredAt + this.hero1Cooldown))) {
         this.attack(this.hero1);
         this.hero1FiredAt = now;
       }
-      if (now > (this.hero2FiredAt + this.hero2Cooldown)) {
+      if ((this.hero2 !== null) && (now > (this.hero2FiredAt + this.hero2Cooldown))) {
         this.attack(this.hero2);
         this.hero2FiredAt = now;
       }
-      if (now > (this.hero3FiredAt + this.hero3Cooldown)) {
+      if ((this.hero3 !== null) && (now > (this.hero3FiredAt + this.hero3Cooldown))) {
         this.attack(this.hero3);
         this.hero3FiredAt = now;
       }
-      if (now > (this.hero4FiredAt + this.hero4Cooldown)) {
+      if ((this.hero4 !== null) && (now > (this.hero4FiredAt + this.hero4Cooldown))) {
         this.attack(this.hero4);
         this.hero4FiredAt = now;
       }
-      if (now > (this.hero5FiredAt + this.hero5Cooldown)) {
+      if ((this.hero5 !== null) && (now > (this.hero5FiredAt + this.hero5Cooldown))) {
         this.attack(this.hero5);
         this.hero5FiredAt = now;
       }
@@ -498,6 +505,7 @@ export default class GameScene extends Phaser.Scene {
   killHero(fireball, hero) {
     var scene = this;
     fireball.destroy();
+    scene.demon.body.setVelocityX(0);
 
     hero.setTint(0xff0000);
     scene.gameEnded = true;
@@ -527,7 +535,6 @@ export default class GameScene extends Phaser.Scene {
             );
         }
       })
-      console.log("end of game");
     }, [], this);  // delay in ms 
   }
 
@@ -535,7 +542,7 @@ export default class GameScene extends Phaser.Scene {
   */
   attack(hero) {
     hero.anims.play(hero.name + '-attack', true);
-    hero.on('animationcomplete', () => {hero.anims.play(hero.name + '-idle', true)});
+    hero.once('animationcomplete', () => {hero.anims.play(hero.name + '-idle', true)});
     switch (hero.name) {
       case 'wizard':
       this.fireProjectile(hero, 'fireball');
@@ -677,9 +684,9 @@ export default class GameScene extends Phaser.Scene {
     //play animation for hero level up
     scene.heroes.children.each((h) => {
       var levelUpSprite = this.scene.physics.add.sprite(h.x, (h.y - 100), 'levelUpInc').anims.play('level-up-inc', true);
-      levelUpSprite.on('animationcomplete', () => {
+      levelUpSprite.once('animationcomplete', () => {
         levelUpSprite.setTexture('levelUpDec').anims.play('level-up-dec', true);
-        levelUpSprite.on('animationcomplete', () => {
+        levelUpSprite.once('animationcomplete', () => {
           levelUpSprite.destroy();
           scene.tweens.add({
             targets: h,
@@ -703,18 +710,31 @@ export default class GameScene extends Phaser.Scene {
       onComplete: (tween, target, text) => {
         text.destroy();
         scene.model.level++;
-        var target = 'Game';
-        scene.cameras.main.fadeOut(500);
-        scene.cameras.main.once(
-          Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
-          () => {
-            scene.scene.start(target);
-            scene.scene.get(target).events.once(
-              Phaser.Scenes.Events.CREATE,
-              () => scene.scene.get(target).cameras.main.fadeIn(500),
-              );
-          },
-          );
+        if (scene.model.level <= 4) {
+          var target = 'Game';
+          scene.cameras.main.fadeOut(500);
+          scene.cameras.main.once(
+            Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+            () => {
+              scene.scene.start(target);
+              scene.scene.get(target).events.once(
+                Phaser.Scenes.Events.CREATE,
+                () => scene.scene.get(target).cameras.main.fadeIn(500),
+                );
+            });
+        } else {
+          var target = 'End';
+          scene.cameras.main.fadeOut(500);
+          scene.cameras.main.once(
+            Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+            () => {
+              scene.scene.start(target);
+              scene.scene.get(target).events.once(
+                Phaser.Scenes.Events.CREATE,
+                () => scene.scene.get(target).cameras.main.fadeIn(500),
+                );
+            });
+        }
       }
     })
   }

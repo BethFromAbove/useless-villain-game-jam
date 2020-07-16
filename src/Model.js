@@ -3,6 +3,6 @@ export default class Model {
     this.soundOn = true;
     this.musicOn = false;
     this.bgMusicPlaying = false;
-    this.level = 4;
+    this.level = 1;
   }
 }
