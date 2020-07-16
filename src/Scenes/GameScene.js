@@ -6,7 +6,7 @@ var defaultWizardCooldown = 2812;
 var defaultRangerCooldown = 2278;
 var defaultFighterCooldown = 1533;
 var defaultRogueCooldown = 1805;
-var defaultBardCooldown = 837;
+var defaultBardCooldown = 1237;
 
 var maxDemonHealth = 100;
 var maxDemonPower = 200;
@@ -228,28 +228,45 @@ export default class GameScene extends Phaser.Scene {
 
     this.addDemon();
 
-    this.hero1 = this.createWizard (((0/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero2 = this.createRanger (((1/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero3 = this.createFighter(((2/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero4 = this.createRogue  (((3/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero5 = this.createBard   (((4/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero1 = this.createWizard(((0/2) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero2 = this.createRanger(((1/2) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
 
     this.hero1Cooldown = defaultWizardCooldown;
     this.hero2Cooldown = defaultRangerCooldown;
-    this.hero3Cooldown = defaultFighterCooldown;
-    this.hero4Cooldown = defaultRogueCooldown;
-    this.hero5Cooldown = defaultBardCooldown;
 
     this.add.image(0, 0, 'foreground').setOrigin(0, 0);
-    this.healthBar = this.add.image(220, 570, 'healthBar').setOrigin(0, 0);
-    this.add.image(220, 570, 'healthBarFrame').setOrigin(0, 0);
-    this.powerBar = this.add.image(420, 570, 'powerBar').setOrigin(0, 0);
+
+    this.add.image(68, 573, 'barBackground').setOrigin(0, 0);
+    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0);
+    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0);
+    this.add.image(432, 573, 'barBackground').setOrigin(0, 0);
+    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0);
     this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0);
   }
 
   addLevel2() {
-    this.levelBackground = this.add.image(0, 0, 'background-level2').setOrigin(0, 0);
+    this.add.image(0, 0, 'floor').setOrigin(0, 0);
+    this.add.image(0, 0, 'background').setOrigin(0, 0);
+    this.add.image(0, 0, 'lava').setOrigin(0, 0);
+
     this.addDemon();
+
+    this.hero1 = this.createWizard (((0/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero2 = this.createFighter(((1/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero3 = this.createRogue  (((2/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+
+    this.hero1Cooldown = defaultWizardCooldown;
+    this.hero2Cooldown = defaultFighterCooldown;
+    this.hero3Cooldown = defaultRogueCooldown;
+
+    this.add.image(0, 0, 'foreground').setOrigin(0, 0);
+
+    this.add.image(68, 573, 'barBackground').setOrigin(0, 0);
+    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0);
+    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0);
+    this.add.image(432, 573, 'barBackground').setOrigin(0, 0);
+    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0);
+    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0);
   }
 
   addLevel3() {
@@ -272,9 +289,41 @@ export default class GameScene extends Phaser.Scene {
     this.hero5Cooldown = defaultBardCooldown;
 
     this.add.image(0, 0, 'foreground').setOrigin(0, 0);
-    this.healthBar = this.add.image(220, 570, 'healthBar').setOrigin(0, 0);
-    this.add.image(220, 570, 'healthBarFrame').setOrigin(0, 0);
-    this.powerBar = this.add.image(420, 570, 'powerBar').setOrigin(0, 0);
+
+    this.add.image(68, 573, 'barBackground').setOrigin(0, 0);
+    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0);
+    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0);
+    this.add.image(432, 573, 'barBackground').setOrigin(0, 0);
+    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0);
+    this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0);
+  }
+
+  addLevel4() {
+    this.add.image(0, 0, 'floor').setOrigin(0, 0);
+    this.add.image(0, 0, 'background').setOrigin(0, 0);
+    this.add.image(0, 0, 'lava').setOrigin(0, 0);
+
+    this.addDemon();
+
+    this.hero1 = this.createwizard (((0/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero2 = this.createRanger (((1/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero3 = this.createFighter(((2/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero4 = this.createRogue  (((3/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero5 = this.createBard   (((4/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+
+    this.hero1Cooldown = defaultWizardCooldown;
+    this.hero2Cooldown = defaultRangerCooldown;
+    this.hero3Cooldown = defaultFighterCooldown;
+    this.hero4Cooldown = defaultRogueCooldown;
+    this.hero5Cooldown = defaultBardCooldown;
+
+    this.add.image(0, 0, 'foreground').setOrigin(0, 0);
+
+    this.add.image(68, 573, 'barBackground').setOrigin(0, 0);
+    this.healthBar = this.add.image(68, 573, 'healthBar').setOrigin(0, 0);
+    this.add.image(57, 570, 'healthBarFrame').setOrigin(0, 0);
+    this.add.image(432, 573, 'barBackground').setOrigin(0, 0);
+    this.powerBar = this.add.image(432, 573, 'powerBar').setOrigin(0, 0);
     this.add.image(420, 570, 'powerBarFrame').setOrigin(0, 0);
   }
 
@@ -286,47 +335,77 @@ export default class GameScene extends Phaser.Scene {
     this.demonPower = 0;
   }
 
-  createWizard(x = 50, y = 100) {
-    var wizard = this.physics.add.sprite(x, y, 'wizard').anims.play('wizard-idle', true);
+  createWizard(x = 0, y = 220) {
+    var wizard = this.physics.add.sprite(0, 260, 'wizard').anims.play('wizard-idle', true);
     wizard.name = 'wizard';
     this.physics.world.enable(wizard);
     wizard.body.setCollideWorldBounds(true);
+    this.tweens.add({
+      targets: wizard,
+      duration: 2000,
+      y: y,
+      x: x
+    });
     this.heroes.add(wizard);
     return wizard;
   }
 
-  createRanger(x = 100, y = 100) {
-    var ranger = this.physics.add.sprite(x, y, 'ranger').anims.play('ranger-idle', true);
+  createRanger(x = 0, y = 220) {
+    var ranger = this.physics.add.sprite(0, 260, 'ranger').anims.play('ranger-idle', true);
     ranger.name = 'ranger';
     this.physics.world.enable(ranger);
     ranger.body.setCollideWorldBounds(true);
+    this.tweens.add({
+      targets: ranger,
+      duration: 2000,
+      y: y,
+      x: x
+    });
     this.heroes.add(ranger);
     return ranger;
   }
 
-  createFighter(x = 150, y = 100) {
-    var fighter = this.physics.add.sprite(x, y, 'fighter').anims.play('fighter-idle', true);
+  createFighter(x = 0, y = 220) {
+    var fighter = this.physics.add.sprite(0, 260, 'fighter').anims.play('fighter-idle', true);
     fighter.name = 'fighter';
     this.physics.world.enable(fighter);
     fighter.body.setCollideWorldBounds(true);
+    this.tweens.add({
+      targets: fighter,
+      duration: 2000,
+      y: y,
+      x: x
+    });
     this.heroes.add(fighter);
     return fighter;
   }
 
-  createRogue(x = 200, y = 100) {
-    var rogue = this.physics.add.sprite(x, y, 'rogue').anims.play('rogue-idle', true);
+  createRogue(x = 0, y = 220) {
+    var rogue = this.physics.add.sprite(0, 260, 'rogue').anims.play('rogue-idle', true);
     rogue.name = 'rogue';
     this.physics.world.enable(rogue);
     rogue.body.setCollideWorldBounds(true);
+    this.tweens.add({
+      targets: rogue,
+      duration: 2000,
+      y: y,
+      x: x
+    });
     this.heroes.add(rogue);
     return rogue;
   }
 
-  createBard(x = 200, y = 100) {
-    var bard = this.physics.add.sprite(x, y, 'bard').anims.play('bard-idle', true);
+  createBard(x = 0, y = 220) {
+    var bard = this.physics.add.sprite(0, 260, 'bard').anims.play('bard-idle', true);
     bard.name = 'bard';
     this.physics.world.enable(bard);
     bard.body.setCollideWorldBounds(true);
+    this.tweens.add({
+      targets: bard,
+      duration: 2000,
+      y: y,
+      x: x
+    });
     this.heroes.add(bard);
     return bard;
   }
@@ -337,6 +416,7 @@ export default class GameScene extends Phaser.Scene {
       //end the game
       this.gameEnded = true;
       this.demon.anims.play('demon-faint', true);
+      this.demon.anims.stopOnFrame(8);
       this.demon.on('animationcomplete', this.gameEnd);
     }
 
@@ -408,7 +488,7 @@ export default class GameScene extends Phaser.Scene {
 
   demonAttack() {
     this.demon.anims.play('demon-attack', true);
-    this.demon.on('animationcomplete', () => {this.demon.anims.play('demon-idle', true)});
+    this.demon.once('animationcomplete', () => {this.demon.anims.play('demon-idle')});
 
     var demonFireball = this.physics.add.sprite((this.demon.x + 60), this.demon.y, 'demonFireball').anims.play('demon-fireball', true);
     demonFireball.body.setVelocityY(-300);
@@ -445,11 +525,9 @@ export default class GameScene extends Phaser.Scene {
       this.rogueAttack(hero);
       break;
       case 'bard':
-      if (Math.random() <= 0.5) {
-        this.fireProjectile(hero, 'note1');
-      } else {
-        this.fireProjectile(hero, 'note2');
-      }
+      this.fireProjectile(hero, 'note1');
+      this.fireProjectile(hero, 'note1');
+      this.fireProjectile(hero, 'note2');
       break
     }
   }
@@ -569,17 +647,51 @@ export default class GameScene extends Phaser.Scene {
   }
 
   gameEnd() {
+    var scene = this.scene;
+
     //play animation for hero level up
-    this.scene.heroes.children.each((h) => {
-      console.log(h.name);
+    scene.heroes.children.each((h) => {
       var levelUpSprite = this.scene.physics.add.sprite(h.x, (h.y - 100), 'levelUpInc').anims.play('level-up-inc', true);
       levelUpSprite.on('animationcomplete', () => {
         levelUpSprite.setTexture('levelUpDec').anims.play('level-up-dec', true);
         levelUpSprite.on('animationcomplete', () => {
           levelUpSprite.destroy();
+          scene.tweens.add({
+            targets: h,
+            duration: 2000,
+            y: 260,
+            x: 800,
+            onCompleteParams: [h],
+            onComplete: (tween, target, hero) => {hero.destroy()}
+          });
         });
       });
     });
+
+    var text = scene.add.image(200, -100, 'goodWorkText').setOrigin(0, 0);
+    scene.tweens.add({
+      targets: text,
+      duration: 2000,
+      y: 150,
+      completeDelay: 1500,
+      onCompleteParams: [text],
+      onComplete: (tween, target, text) => {
+        text.destroy();
+        scene.model.level++;
+        var target = 'Game';
+        scene.cameras.main.fadeOut(500);
+        scene.cameras.main.once(
+          Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+          () => {
+            scene.scene.start(target);
+            scene.scene.get(target).events.once(
+              Phaser.Scenes.Events.CREATE,
+              () => scene.scene.get(target).cameras.main.fadeIn(500),
+            );
+          },
+        );
+      }
+    })
     //callback function to transition to next screen
   }
 }
