@@ -89,8 +89,8 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.image('note1', 'assets/music1.png');
     this.load.image('note2', 'assets/note2.png');
 
-    this.load.spritesheet('levelUpInc', 'assets/levelUpapp.png', { frameWidth: 86, frameHeight: 93 });
-    this.load.spritesheet('levelUpDec', 'assets/levelUpdis.png', { frameWidth: 86, frameHeight: 93 });
+    this.load.spritesheet('levelUpInc', 'assets/LevelUpapp.png', { frameWidth: 86, frameHeight: 93 });
+    this.load.spritesheet('levelUpDec', 'assets/LevelUpdis.png', { frameWidth: 86, frameHeight: 93 });
 
     this.load.image('floor', 'assets/Floor.png');
     this.load.image('background', 'assets/Background.png');
@@ -98,6 +98,7 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.image('foreground', 'assets/Foreground.png');
 
     this.load.image('paperBackground', 'assets/Paperonbackground.png');
+    this.load.image('optionsBackground', 'assets/OptionsBackground.png');
 
     this.load.image('healthBar', 'assets/greenbar.png');
     this.load.image('healthBarFrame', 'assets/lifebarframe.png');
