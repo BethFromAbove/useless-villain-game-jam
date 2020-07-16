@@ -9,19 +9,19 @@ export default class TitleScene extends Phaser.Scene {
   create() {
     const { config } = this.game;
 
-    // this.add.image(config.width / 2, config.height / 2, 'background');
+    this.add.image(config.width / 2, config.height / 2, 'paperBackground');
 
     // Game - Head to Rocket Select page
-    this.gameButton = new Button(this, 475, 330, 'playButton', 'playButtonPressed', 'Game');
+    this.gameButton = new Button(this, 475, 230, 'playButtonUp', 'playButtonDown', 'Game');
 
     // Options
-    this.optionsButton = new Button(this, 625, 330, 'optionsButton', 'optionsButtonPressed', 'Options');
+    this.optionsButton = new Button(this, 500, 300, 'optionsButtonUp', 'optionsButtonDown', 'Options');
 
     // About
-    this.aboutButton = new Button(this, 475, 415, 'aboutButton', 'aboutButtonPressed', 'About');
+    //this.aboutButton = new Button(this, 475, 430, 'aboutButton', 'aboutButtonPressed', 'About');
 
     // credits
-    this.creditsButton = new Button(this, 625, 415, 'creditsButton', 'creditsButtonPressed', 'Credits');
+    this.creditsButton = new Button(this, 520, 370, 'creditsButtonUp', 'creditsButtonDown', 'Credits');
 
     this.model = this.sys.game.globals.model;
 
