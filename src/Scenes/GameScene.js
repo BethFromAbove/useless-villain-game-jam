@@ -622,7 +622,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   projectileHitDemon(demon, projectile) {
-    if (projectile.y >= 500) {
+    if (!this.gameEnded && projectile.y >= 500) {
       switch (projectile.name) {
       case 'fireball':
         this.demonHealth -= 90;
