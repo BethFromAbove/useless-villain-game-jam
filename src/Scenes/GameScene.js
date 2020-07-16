@@ -4,11 +4,11 @@ import 'phaser';
 // syncing.
 var defaultWizardCooldown = 2812;
 var defaultRangerCooldown = 2278;
-var defaultFighterCooldown = 1533;
+var defaultFighterCooldown = 2133;
 var defaultRogueCooldown = 1805;
 var defaultBardCooldown = 1237;
 
-var maxDemonHealth = 400;
+var maxDemonHealth = 500;
 var maxDemonPower = 200;
 
 export default class GameScene extends Phaser.Scene {
@@ -33,6 +33,13 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     const { config } = this.game;
+    this.model = this.sys.game.globals.model;
+
+    if (this.model.musicOn === true && this.model.currentMusic === 'bgMusic') {
+      this.game.registry.get('bgMusic').stop();
+      this.game.registry.get('bossFight').play();
+      this.model.currentMusic = 'bossFight';
+    }
 
     this.gameEnded = false;
 
@@ -56,7 +63,6 @@ export default class GameScene extends Phaser.Scene {
     this.heroes = new Phaser.GameObjects.Group(this);
     this.demonFireballs = new Phaser.GameObjects.Group(this);
 
-    this.model = this.sys.game.globals.model;
     switch (this.model.level) {
       case 1:
       this.addLevel1();
@@ -233,11 +239,13 @@ export default class GameScene extends Phaser.Scene {
 
     this.addDemon();
 
-    this.hero1 = this.createWizard(((0/2) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
-    this.hero2 = this.createRanger(((1/2) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero1 = this.createRanger(((0/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero2 = this.createWizard(((1/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero3 = this.createRanger(((2/3) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
 
-    this.hero1Cooldown = defaultWizardCooldown;
-    this.hero2Cooldown = defaultRangerCooldown;
+    this.hero1Cooldown = defaultRangerCooldown;
+    this.hero2Cooldown = defaultWizardCooldown;
+    this.hero3Cooldown = defaultRangerCooldown;
 
     this.add.image(0, 0, 'foreground').setOrigin(0, 0).setDepth(7);
 
@@ -342,7 +350,9 @@ export default class GameScene extends Phaser.Scene {
     this.tweens.add({
       targets: this.demon,
       duration: 1500,
-      y: 500
+      y: 500,
+      onCompleteParams: [this.demon],
+      onComplete: (tween, target, demon) => {demon.setCollideWorldBounds(true);}
     });
   }
 
@@ -435,10 +445,10 @@ export default class GameScene extends Phaser.Scene {
     if (!this.gameEnded) {
       // Move Demon based on arrow keys
       if (this.cursors.left.isDown) {
-        this.demon.body.setVelocityX(-300);
+        this.demon.body.setVelocityX(-400);
       }
       else if (this.cursors.right.isDown) {
-        this.demon.body.setVelocityX(300);
+        this.demon.body.setVelocityX(400);
       }
       else {
         this.demon.body.setVelocityX(0);
@@ -503,7 +513,7 @@ export default class GameScene extends Phaser.Scene {
     this.demon.once('animationcomplete', () => {this.demon.anims.play('demon-idle')});
 
     var demonFireball = this.physics.add.sprite((this.demon.x + 60), this.demon.y, 'demonFireball').anims.play('demon-fireball', true);
-    demonFireball.body.setVelocityY(-300);
+    demonFireball.body.setVelocityY(-500);
     this.demonFireballs.add(demonFireball);
   }
 
@@ -514,6 +524,10 @@ export default class GameScene extends Phaser.Scene {
 
     hero.setTint(0xff0000);
     scene.gameEnded = true;
+
+    if (this.model.soundOn === true) {
+      this.game.registry.get('failureNoise').play();
+    }
 
     var timer = scene.time.delayedCall(1000, () => {
       //replay level
@@ -554,7 +568,7 @@ export default class GameScene extends Phaser.Scene {
       this.tweens.add({
         targets: hero,
         duration: 1000,
-        x: hero.x + (this.randWidth() * (0.8 * (0.5 - Math.random())))
+        x: hero.x + (this.randWidth() * (0.6 * (0.5 - Math.random())))
       });
     });
     switch (hero.name) {
@@ -611,7 +625,7 @@ export default class GameScene extends Phaser.Scene {
     if (projectile.y >= 500) {
       switch (projectile.name) {
       case 'fireball':
-        this.demonHealth -= 10;
+        this.demonHealth -= 90;
         break;
       case 'arrow':
         this.demonHealth -= 50;
@@ -660,31 +674,31 @@ export default class GameScene extends Phaser.Scene {
    * effective ranges as well as different easing functions.
    */
    stab(hero, range) {
-    var easingFn = 'Power0';
-    var damage = 0;
-    switch (hero.name) {
-      case 'fighter':
-      easingFn = Phaser.Math.Easing.Elastic.InOut;
-      damage = 30;
-      break;
-      case 'rogue':
-      easingFn = Phaser.Math.Easing.Expo.In;
-      damage = 45;
-      break;
-    }
-
-    this.tweens.add({
-      targets: hero,
-      duration: 300,
-      y: hero.y + range,
-      ease: easingFn,
-      yoyo: true,
-      onYoyo: this.checkStab,
-      onYoyoParams: [hero.x, damage],
-      onYoyoScope: this
-    });
-    // @TODO: check if in line with Demon and reduce health according
-    // to hero strength or something.
+     var easingFn = 'Power0';
+     var damage = 0;
+     switch (hero.name) {
+     case 'fighter':
+       easingFn = Phaser.Math.Easing.Elastic.InOut;
+       damage = 40;
+       break;
+     case 'rogue':
+       easingFn = Phaser.Math.Easing.Expo.In;
+       damage = 25;
+       break;
+     }
+     
+     this.tweens.add({
+       targets: hero,
+       duration: 300,
+       y: hero.y + range,
+       ease: easingFn,
+       yoyo: true,
+       onYoyo: this.checkStab,
+       onYoyoParams: [hero.x, damage],
+       onYoyoScope: this
+     });
+     // @TODO: check if in line with Demon and reduce health according
+     // to hero strength or something.
   }
 
   checkStab(tween, target, x, damage) {
@@ -715,6 +729,11 @@ export default class GameScene extends Phaser.Scene {
         });
       });
     });
+
+    // play level up sound
+    if (scene.model.soundOn === true) {
+      scene.game.registry.get('levelUp').play();
+    }
 
     var text = scene.add.image(170, -100, 'goodWorkText').setOrigin(0, 0);
     scene.tweens.add({
