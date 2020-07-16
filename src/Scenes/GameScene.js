@@ -305,7 +305,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.addDemon();
 
-    this.hero1 = this.createwizard (((0/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
+    this.hero1 = this.createWizard (((0/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
     this.hero2 = this.createRanger (((1/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
     this.hero3 = this.createFighter(((2/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
     this.hero4 = this.createRogue  (((3/5) * this.canvas.width) + (this.randWidth() / 4), (220 + (Math.random() * 40)));
@@ -496,12 +496,37 @@ export default class GameScene extends Phaser.Scene {
   }
 
   killHero(fireball, hero) {
+    var scene = this;
     fireball.destroy();
 
     hero.setTint(0xff0000);
-    this.gameEnded = true;
+    scene.gameEnded = true;
 
-    var timer = this.time.delayedCall(1000, () => {
+    var timer = scene.time.delayedCall(1000, () => {
+      //replay level
+      var text = scene.add.image(70, -100, 'dontKillText').setOrigin(0, 0);
+      scene.tweens.add({
+        targets: text,
+        duration: 2000,
+        y: 300,
+        completeDelay: 1500,
+        onCompleteParams: [text],
+        onComplete: (tween, target, text) => {
+          text.destroy();
+          var target = 'Game';
+          scene.cameras.main.fadeOut(500);
+          scene.cameras.main.once(
+            Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+            () => {
+              scene.scene.start(target);
+              scene.scene.get(target).events.once(
+                Phaser.Scenes.Events.CREATE,
+                () => scene.scene.get(target).cameras.main.fadeIn(500),
+                );
+            },
+            );
+        }
+      })
       console.log("end of game");
     }, [], this);  // delay in ms 
   }
@@ -668,11 +693,11 @@ export default class GameScene extends Phaser.Scene {
       });
     });
 
-    var text = scene.add.image(200, -100, 'goodWorkText').setOrigin(0, 0);
+    var text = scene.add.image(170, -100, 'goodWorkText').setOrigin(0, 0);
     scene.tweens.add({
       targets: text,
       duration: 2000,
-      y: 150,
+      y: 300,
       completeDelay: 1500,
       onCompleteParams: [text],
       onComplete: (tween, target, text) => {
@@ -687,11 +712,10 @@ export default class GameScene extends Phaser.Scene {
             scene.scene.get(target).events.once(
               Phaser.Scenes.Events.CREATE,
               () => scene.scene.get(target).cameras.main.fadeIn(500),
-            );
+              );
           },
-        );
+          );
       }
     })
-    //callback function to transition to next screen
   }
 }
