@@ -206,12 +206,12 @@ export default class GameScene extends Phaser.Scene {
 
     // Level up animation
     this.anims.create({
-      key: 'level-up1',
+      key: 'level-up-inc',
       frames: this.anims.generateFrameNumbers('levelUpInc', { start: 0, end: 5 }),
       frameRate: 15
     });
     this.anims.create({
-      key: 'level-up2',
+      key: 'level-up-dec',
       frames: this.anims.generateFrameNumbers('levelUpDec', { start: 0, end: 5 }),
       frameRate: 15
     });
@@ -570,11 +570,16 @@ export default class GameScene extends Phaser.Scene {
 
   gameEnd() {
     //play animation for hero level up
-    // for (hero in this.heroes) {
-
-    // }
-    // this.scene.physics.add.sprite(200, 300, 'levelUpInc').anims.play('level-up1', true);
-
+    this.scene.heroes.children.each((h) => {
+      console.log(h.name);
+      var levelUpSprite = this.scene.physics.add.sprite(h.x, (h.y - 100), 'levelUpInc').anims.play('level-up-inc', true);
+      levelUpSprite.on('animationcomplete', () => {
+        levelUpSprite.setTexture('levelUpDec').anims.play('level-up-dec', true);
+        levelUpSprite.on('animationcomplete', () => {
+          levelUpSprite.destroy();
+        });
+      });
+    });
     //callback function to transition to next screen
   }
 }
